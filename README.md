@@ -22,6 +22,10 @@
 
 - **[organize_files.py](file_operations/organize_files.py)**: 自动整理文件夹，按文件类型分类文件到不同子文件夹中，并生成整理报告。[详情](file_operations/README.md)
 
+### 系统工具
+
+- **[system_monitor.py](system_tools/system_monitor.py)**: 实时监控系统资源使用情况，显示CPU、内存、磁盘和网络使用情况，支持数据导出。[详情](system_tools/README.md)
+
 ## 贡献
 
 这是一个个人使用的脚本集合，但欢迎分享您的想法和改进建议。
