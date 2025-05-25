@@ -34,6 +34,10 @@
 
 - **[code_analyzer.py](dev_tools/code_analyzer.py)**: 分析代码库结构、统计代码量、评估复杂度等，支持多种编程语言，可生成可视化报告。[详情](dev_tools/README.md)
 
+### 数据处理
+
+- **[data_processor.py](data_tools/data_processor.py)**: 提供CSV和Excel文件的数据分析、清洗、转换和可视化功能，支持数据过滤、统计分析和图表生成。[详情](data_tools/README.md)
+
 ## 贡献
 
 这是一个个人使用的脚本集合，但欢迎分享您的想法和改进建议。
