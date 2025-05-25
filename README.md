@@ -21,6 +21,7 @@
 ### 文件操作
 
 - **[organize_files.py](file_operations/organize_files.py)**: 自动整理文件夹，按文件类型分类文件到不同子文件夹中，并生成整理报告。[详情](file_operations/README.md)
+- **[batch_rename.py](file_operations/batch_rename.py)**: 批量重命名文件，支持多种重命名模式、文件筛选和预览功能，还能保存历史操作并提供撤销功能。[详情](file_operations/README.md)
 
 ### 系统工具
 
