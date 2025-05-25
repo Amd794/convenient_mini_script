@@ -26,6 +26,10 @@
 
 - **[system_monitor.py](system_tools/system_monitor.py)**: 实时监控系统资源使用情况，显示CPU、内存、磁盘和网络使用情况，支持数据导出。[详情](system_tools/README.md)
 
+### 网络工具
+
+- **[network_speed_test.py](network_tools/network_speed_test.py)**: 测试网络连接性能，包括下载速度、上传速度、延迟和丢包率，支持历史数据记录和可视化。[详情](network_tools/README.md)
+
 ## 贡献
 
 这是一个个人使用的脚本集合，但欢迎分享您的想法和改进建议。
