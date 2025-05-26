@@ -594,3 +594,138 @@ options:
 - 建议定期备份重要数据
 - 推荐使用交互式密码输入，避免在命令行中直接提供密码
 - 使用`--delete`选项时请格外小心，原始文件将被安全删除且无法恢复
+
+## file_sync.py - 文件同步工具
+
+这个脚本提供了目录同步功能，可以在两个目录之间保持文件内容的一致性，适用于备份数据、工作文件同步和项目协作等场景。
+
+### 功能特点
+
+- **多种同步模式**:
+  - 单向同步（从源目录到目标目录）
+  - 双向同步（两个目录之间相互同步，保留最新的文件）
+  - 镜像同步（目标目录完全匹配源目录，包括删除源中不存在的文件）
+  - 更新模式（仅更新目标中已存在的文件）
+- **智能文件对比**:
+  - 基于修改时间的快速比较
+  - 基于文件大小的预先筛选
+  - 基于内容哈希值的精确比较
+- **灵活的过滤选项**:
+  - 可排除特定文件模式（如 *.tmp, *.log）
+  - 可选择性包含隐藏文件
+  - 支持符号链接处理
+- **冲突解决策略**:
+  - 基于修改时间（保留较新的文件）
+  - 基于文件大小（保留较大的文件）
+  - 固定策略（始终使用源文件或目标文件）
+  - 可跳过冲突文件
+- **详细的同步报告**:
+  - 统计信息（复制、更新、删除、跳过的文件数）
+  - 文件操作日志
+  - 可导出为JSON格式
+
+### 基本使用方法
+
+单向同步（默认模式）：
+```bash
+python file_sync.py source_dir target_dir
+```
+
+双向同步：
+```bash
+python file_sync.py source_dir target_dir -m two-way
+```
+
+镜像同步：
+```bash
+python file_sync.py source_dir target_dir -m mirror
+```
+
+更新模式：
+```bash
+python file_sync.py source_dir target_dir -m update
+```
+
+### 高级用法示例
+
+排除特定文件：
+```bash
+python file_sync.py source_dir target_dir -e "*.tmp" "*.log" ".git*"
+```
+
+模拟运行（不实际修改文件）：
+```bash
+python file_sync.py source_dir target_dir --dry-run
+```
+
+使用特定冲突解决策略：
+```bash
+python file_sync.py source_dir target_dir -m two-way -c larger
+```
+
+生成同步报告：
+```bash
+python file_sync.py source_dir target_dir -r sync_report.json
+```
+
+包含隐藏文件并跟随符号链接：
+```bash
+python file_sync.py source_dir target_dir --include-hidden --follow-symlinks
+```
+
+删除目标目录中源目录不存在的文件：
+```bash
+python file_sync.py source_dir target_dir --delete-orphaned
+```
+
+### 完整命令行参数
+
+```
+usage: file_sync.py [-h] [-m {one-way,two-way,mirror,update}]
+                   [-c {newer,larger,source,target,skip,prompt}]
+                   [-e EXCLUDE [EXCLUDE ...]] [--include-hidden]
+                   [--delete-orphaned] [--no-metadata] [--follow-symlinks]
+                   [--dry-run] [-r REPORT] [-q] [-v]
+                   source target
+
+文件同步工具 - 同步两个目录的内容
+
+positional arguments:
+  source                源目录路径
+  target                目标目录路径
+
+options:
+  -h, --help            显示帮助信息并退出
+  -m, --mode {one-way,two-way,mirror,update}
+                        同步模式（默认: one-way）
+  -c, --conflict {newer,larger,source,target,skip,prompt}
+                        冲突解决策略（默认: newer）
+  -e, --exclude EXCLUDE [EXCLUDE ...]
+                        排除的文件模式列表（如 *.tmp *.log）
+  --include-hidden      包括隐藏文件（以.开头）
+  --delete-orphaned     删除目标中源不存在的文件
+  --no-metadata         不保留文件元数据（修改时间等）
+  --follow-symlinks     跟随符号链接
+  --dry-run             仅模拟运行，不实际修改文件
+  -r, --report REPORT   生成同步报告的文件路径
+  -q, --quiet           静默模式，减少输出
+  -v, --verbose         详细模式，显示更多信息
+```
+
+### 同步模式说明
+
+- **单向同步 (one-way)**: 将源目录的文件复制到目标目录。只会添加或更新文件，不会删除目标目录中的任何文件。
+- **双向同步 (two-way)**: 两个目录之间相互同步，保留最新的文件版本。适合两个工作环境之间的文件同步。
+- **镜像同步 (mirror)**: 使目标目录成为源目录的精确副本，包括删除源目录中不存在的文件。适合备份场景。
+- **更新模式 (update)**: 仅更新目标目录中已存在的文件，不会添加新文件或删除文件。适合更新已部署的应用程序。
+
+### 冲突解决策略
+
+当双向同步时，如果两个目录中的同一文件都有修改，会产生冲突。可以通过以下策略解决：
+
+- **newer**: 保留修改时间较新的文件（默认）
+- **larger**: 保留文件大小较大的文件
+- **source**: 始终使用源目录中的文件
+- **target**: 始终使用目标目录中的文件
+- **skip**: 跳过冲突文件，不进行同步
+- **prompt**: 提示用户选择（目前尚未实现，等同于skip）
