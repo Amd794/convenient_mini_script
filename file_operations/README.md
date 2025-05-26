@@ -209,3 +209,150 @@ options:
   --list-history        显示历史重命名记录
   --undo ID             撤销指定的重命名操作（使用--list-history查看可用ID）
 ``` 
+
+## file_finder.py - 文件搜索工具
+
+这个脚本提供了强大的文件搜索功能，支持按多种条件查找文件，并可以对结果进行排序和格式化输出。
+
+### 功能特点
+
+- **多条件搜索**:
+  - 按文件名搜索（支持通配符和正则表达式）
+  - 按文件扩展名搜索
+  - 按文件大小范围搜索
+  - 按文件日期范围搜索（修改日期、创建日期、访问日期）
+  - 按文件内容搜索（支持文本模式和正则表达式）
+- **高级过滤**:
+  - 包含/排除隐藏文件
+  - 仅文件或仅目录过滤
+  - 结果数量限制
+- **结果处理**:
+  - 多种排序方式（名称、大小、日期、扩展名、路径）
+  - 多种输出格式（列表、表格、CSV）
+  - 内容匹配行显示（带上下文）
+  - 结果保存到文件
+
+### 基本使用方法
+
+按文件名搜索（支持通配符）：
+```bash
+python file_finder.py -n "*.txt"
+```
+
+按文件扩展名搜索：
+```bash
+python file_finder.py -e jpg png gif
+```
+
+按文件内容搜索：
+```bash
+python file_finder.py -c "搜索文本"
+```
+
+按文件大小搜索：
+```bash
+python file_finder.py --min-size 1MB --max-size 10MB
+```
+
+按修改日期搜索：
+```bash
+python file_finder.py --min-date "2023-01-01" --max-date "2023-12-31"
+```
+
+### 高级用法示例
+
+使用正则表达式搜索文件名：
+```bash
+python file_finder.py -n ".*[0-9]{4}.*\.jpg" --regex
+```
+
+搜索特定内容并显示上下文行：
+```bash
+python file_finder.py -c "import os" --context-lines 2
+```
+
+搜索大文件并按大小排序：
+```bash
+python file_finder.py --min-size 100MB --sort-by size --reverse
+```
+
+搜索最近修改的文件：
+```bash
+python file_finder.py --min-date "2023-12-01" --sort-by modified --reverse
+```
+
+以表格格式显示详细结果：
+```bash
+python file_finder.py -n "*.py" --format table -d
+```
+
+保存搜索结果到CSV文件：
+```bash
+python file_finder.py -n "*.doc*" -o results.csv --format csv -d
+```
+
+### 完整命令行参数
+
+```
+usage: file_finder.py [-h] [-r] [--no-recursive] [-n NAME] [--regex] [-i]
+                     [-e EXTENSION [EXTENSION ...]] [--min-size MIN_SIZE]
+                     [--max-size MAX_SIZE] [--min-date MIN_DATE]
+                     [--max-date MAX_DATE]
+                     [--time-type {modified,created,accessed}]
+                     [-c CONTENT] [--max-content-size MAX_CONTENT_SIZE]
+                     [--include-binary] [--context-lines CONTEXT_LINES]
+                     [--include-hidden] [--only-files] [--only-dirs]
+                     [--limit LIMIT]
+                     [--sort-by {name,size,modified,created,extension,path}]
+                     [--reverse] [--format {list,table,csv}] [-d]
+                     [--show-matches] [-o OUTPUT]
+                     [search_path]
+
+文件搜索工具 - 按各种条件搜索文件
+
+positional arguments:
+  search_path           搜索起始路径，默认为当前目录
+
+options:
+  -h, --help            显示帮助信息并退出
+  -r, --recursive       递归搜索子目录（默认启用）
+  --no-recursive        不递归搜索子目录
+
+搜索条件（至少指定一个）:
+  -n, --name NAME       按文件名搜索，支持通配符（如 *.txt）
+  --regex               将名称或内容参数解释为正则表达式
+  -i, --ignore-case     忽略大小写
+  -e, --extension EXTENSION [EXTENSION ...]
+                        按文件扩展名搜索（如 txt py）
+  --min-size MIN_SIZE   最小文件大小（如 1KB、2MB）
+  --max-size MAX_SIZE   最大文件大小（如 5MB、1GB）
+  --min-date MIN_DATE   最早日期（YYYY-MM-DD 或 YYYY-MM-DD HH:MM:SS）
+  --max-date MAX_DATE   最晚日期（YYYY-MM-DD 或 YYYY-MM-DD HH:MM:SS）
+  --time-type {modified,created,accessed}
+                        时间类型（默认: modified）
+  -c, --content CONTENT
+                        按文件内容搜索
+  --max-content-size MAX_CONTENT_SIZE
+                        内容搜索的最大文件大小（默认: 10MB）
+  --include-binary      包含二进制文件在内容搜索中
+  --context-lines CONTEXT_LINES
+                        显示匹配行周围的上下文行数
+
+结果过滤:
+  --include-hidden      包含隐藏文件
+  --only-files          只包含文件，不包含目录
+  --only-dirs           只包含目录，不包含文件
+  --limit LIMIT         限制结果数量（0表示不限制）
+
+结果排序:
+  --sort-by {name,size,modified,created,extension,path}
+                        排序关键字（默认: name）
+  --reverse             倒序排列
+
+输出选项:
+  --format {list,table,csv}
+                        输出格式（默认: list）
+  -d, --details         显示详细信息
+  --show-matches        显示内容匹配行
+  -o, --output OUTPUT   将结果保存到文件
+``` 
