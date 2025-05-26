@@ -356,3 +356,114 @@ options:
   --show-matches        显示内容匹配行
   -o, --output OUTPUT   将结果保存到文件
 ``` 
+
+## file_compare.py - 文件比较工具
+
+这个脚本提供了强大的文件和目录比较功能，可以识别并显示文件之间的差异，以及比较目录结构和内容。
+
+### 功能特点
+
+- **文件比较**:
+  - 支持文本文件行级比较
+  - 支持二进制文件比较
+  - 可选择忽略空白字符、大小写和空行
+  - 显示上下文差异
+  - 针对大文件优化的比较方法
+- **目录比较**:
+  - 识别仅存在于一侧的文件和目录
+  - 比较两侧都存在的文件内容
+  - 递归比较子目录
+  - 支持忽略特定文件或目录
+- **差异报告**:
+  - 文本格式报告（控制台友好）
+  - HTML格式报告（带颜色高亮）
+  - JSON格式报告（便于程序处理）
+  - 可保存报告到文件
+
+### 基本使用方法
+
+比较两个文件：
+```bash
+python file_compare.py file1.txt file2.txt
+```
+
+比较两个目录：
+```bash
+python file_compare.py dir1 dir2
+```
+
+生成HTML格式报告：
+```bash
+python file_compare.py file1.py file2.py --format html -o report.html
+```
+
+忽略空白字符和大小写：
+```bash
+python file_compare.py file1.txt file2.txt -w -i
+```
+
+### 高级用法示例
+
+比较目录时忽略某些文件：
+```bash
+python file_compare.py project1 project2 --ignore "*.pyc" "*.log" "__pycache__"
+```
+
+只显示摘要信息：
+```bash
+python file_compare.py dir1 dir2 -q
+```
+
+显示更多上下文行：
+```bash
+python file_compare.py file1.py file2.py --context-lines 5
+```
+
+不递归比较子目录：
+```bash
+python file_compare.py dir1 dir2 --no-recursive
+```
+
+生成JSON格式报告：
+```bash
+python file_compare.py dir1 dir2 --format json -o diff.json
+```
+
+### 完整命令行参数
+
+```
+usage: file_compare.py [-h] [-r] [--no-recursive] [-i] [-w] [-B]
+                      [-c CONTEXT_LINES] [--binary]
+                      [--ignore IGNORE [IGNORE ...]]
+                      [--format {text,html,json}] [-o OUTPUT] [-q] [-v]
+                      path1 path2
+
+文件和目录比较工具
+
+positional arguments:
+  path1                 第一个文件或目录路径
+  path2                 第二个文件或目录路径
+
+比较选项:
+  -r, --recursive       递归比较子目录（默认启用）
+  --no-recursive        不递归比较子目录
+  -i, --ignore-case     忽略大小写差异
+  -w, --ignore-whitespace
+                        忽略空白字符差异
+  -B, --ignore-blank-lines
+                        忽略空行
+  -c, --context-lines CONTEXT_LINES
+                        显示差异上下文的行数（默认: 3）
+  --binary              以二进制模式比较文件
+
+过滤选项:
+  --ignore IGNORE [IGNORE ...]
+                        忽略的文件或目录模式列表（如 *.pyc __pycache__）
+
+输出选项:
+  --format {text,html,json}
+                        输出格式（默认: text）
+  -o, --output OUTPUT   输出报告的文件路径
+  -q, --quiet           静默模式，仅显示摘要信息
+  -v, --verbose         详细模式，显示更多信息
+```
