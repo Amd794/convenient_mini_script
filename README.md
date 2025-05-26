@@ -24,6 +24,7 @@
 - **[batch_rename.py](file_operations/batch_rename.py)**: 批量重命名文件，支持多种重命名模式、文件筛选和预览功能，还能保存历史操作并提供撤销功能。[详情](file_operations/README.md)
 - **[file_finder.py](file_operations/file_finder.py)**: 强大的文件搜索工具，支持按文件名、内容、大小、日期等条件搜索文件，并提供多种结果排序和输出格式选项。[详情](file_operations/README.md)
 - **[file_compare.py](file_operations/file_compare.py)**: 文件和目录比较工具，能够识别和显示文件之间的差异，以及比较目录结构和内容，支持多种输出格式。[详情](file_operations/README.md)
+- **[file_encrypt.py](file_operations/file_encrypt.py)**: 文件加密/解密工具，支持多种加密算法，提供对单个文件和整个目录的加密保护，带有文件完整性校验和安全删除功能。[详情](file_operations/README.md)
 
 ### 系统工具
 

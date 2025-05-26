@@ -467,3 +467,130 @@ positional arguments:
   -q, --quiet           静默模式，仅显示摘要信息
   -v, --verbose         详细模式，显示更多信息
 ```
+
+## file_encrypt.py - 文件加密/解密工具
+
+这个脚本提供了文件和目录的加密与解密功能，用于保护敏感数据和个人隐私文件。
+
+### 功能特点
+
+- **多种加密算法**:
+  - AES (高级加密标准) - 对称加密算法，广泛用于数据保护
+  - Fernet - Python cryptography库的高级加密方案，提供认证加密
+- **文件安全措施**:
+  - 基于密码的加密，使用PBKDF2派生密钥
+  - 盐值随机生成，增强安全性
+  - 文件完整性校验（SHA-256哈希）
+  - 安全删除选项（多次覆盖原始文件内容）
+- **批量处理**:
+  - 支持单个文件和整个目录树的加密/解密
+  - 递归处理子目录
+  - 可选择性排除特定文件
+- **友好的用户界面**:
+  - 交互式密码输入（不显示密码）
+  - 加密/解密进度反馈
+  - 详细的错误报告
+
+### 基本使用方法
+
+加密单个文件：
+```bash
+python file_encrypt.py -e sensitive_document.docx
+```
+
+解密文件：
+```bash
+python file_encrypt.py -d sensitive_document.docx.encrypted
+```
+
+加密整个目录：
+```bash
+python file_encrypt.py -e important_folder
+```
+
+解密整个目录：
+```bash
+python file_encrypt.py -d important_folder_encrypted
+```
+
+生成随机强密码：
+```bash
+python file_encrypt.py -g
+```
+
+### 高级用法示例
+
+使用AES算法加密：
+```bash
+python file_encrypt.py -e data.db -a aes
+```
+
+指定输出路径：
+```bash
+python file_encrypt.py -e photos.zip -o "D:\Backup\photos.zip.encrypted"
+```
+
+加密后删除原始文件：
+```bash
+python file_encrypt.py -e tax_documents.pdf --delete
+```
+
+排除某些文件：
+```bash
+python file_encrypt.py -e project_folder --exclude "*.log" "*.tmp" ".git*"
+```
+
+从文件读取密码（用于脚本自动化）：
+```bash
+python file_encrypt.py -e database.sql --password-file my_password.txt
+```
+
+不递归处理子目录：
+```bash
+python file_encrypt.py -e data_folder --no-recursive
+```
+
+### 完整命令行参数
+
+```
+usage: file_encrypt.py [-h] (-e | -d | -g) [-o OUTPUT] [-a {aes,fernet}]
+                      [-p PASSWORD] [--password-file PASSWORD_FILE] [--delete]
+                      [-r] [--no-recursive] [--exclude EXCLUDE [EXCLUDE ...]]
+                      [--no-verify] [--length LENGTH] [-q] [-v]
+                      [path]
+
+文件加密/解密工具
+
+positional arguments:
+  path                  要处理的文件或目录路径
+
+options:
+  -h, --help            显示帮助信息并退出
+  -e, --encrypt         加密文件或目录
+  -d, --decrypt         解密文件或目录
+  -g, --generate-password
+                        生成随机密码
+  -o, --output OUTPUT   输出文件或目录路径
+  -a, --algorithm {aes,fernet}
+                        加密算法 (默认: fernet)
+  -p, --password PASSWORD
+                        加密/解密密码 (不推荐在命令行中使用)
+  --password-file PASSWORD_FILE
+                        从文件读取密码
+  --delete              处理后删除原始文件
+  -r, --recursive       递归处理子目录（默认启用）
+  --no-recursive        不递归处理子目录
+  --exclude EXCLUDE [EXCLUDE ...]
+                        排除的文件模式列表（如 *.log *.tmp）
+  --no-verify           解密时不验证文件完整性
+  --length LENGTH       生成的随机密码长度（默认: 16）
+  -q, --quiet           静默模式，减少输出
+  -v, --verbose         详细模式，显示更多信息
+```
+
+### 安全注意事项
+
+- 请妥善保管您的密码，一旦丢失将无法恢复加密文件
+- 建议定期备份重要数据
+- 推荐使用交互式密码输入，避免在命令行中直接提供密码
+- 使用`--delete`选项时请格外小心，原始文件将被安全删除且无法恢复
