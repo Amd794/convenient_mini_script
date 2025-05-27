@@ -26,6 +26,7 @@
 - **[file_compare.py](file_operations/file_compare.py)**: 文件和目录比较工具，能够识别和显示文件之间的差异，以及比较目录结构和内容，支持多种输出格式。[详情](file_operations/README.md)
 - **[file_encrypt.py](file_operations/file_encrypt.py)**: 文件加密/解密工具，支持多种加密算法，提供对单个文件和整个目录的加密保护，带有文件完整性校验和安全删除功能。[详情](file_operations/README.md)
 - **[file_sync.py](file_operations/file_sync.py)**: 文件同步工具，支持多种同步模式（单向、双向、镜像等），可在两个目录之间保持文件内容的一致性，具有智能冲突解决和详细报告功能。[详情](file_operations/README.md)
+- **[file_compress.py](file_operations/file_compress.py)**: 文件压缩/解压工具，支持多种压缩格式（ZIP、TAR、TAR.GZ、TAR.BZ2），提供灵活的压缩选项和解压功能，适用于文件备份、共享和存储空间优化。[详情](file_operations/README.md)
 
 ### 系统工具
 

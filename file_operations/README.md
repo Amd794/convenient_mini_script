@@ -729,3 +729,136 @@ options:
 - **target**: 始终使用目标目录中的文件
 - **skip**: 跳过冲突文件，不进行同步
 - **prompt**: 提示用户选择（目前尚未实现，等同于skip）
+
+## file_compress.py - 文件压缩/解压工具
+
+这个脚本提供了文件和目录的压缩与解压功能，支持多种压缩格式，适用于文件备份、文件共享和存储空间优化。
+
+### 功能特点
+
+- **多种压缩格式支持**:
+  - ZIP格式 - 最常用的跨平台压缩格式
+  - TAR格式 - 无压缩的归档格式
+  - TAR.GZ格式 - 使用GZIP算法压缩的TAR文件
+  - TAR.BZ2格式 - 使用BZIP2算法压缩的TAR文件
+- **丰富的压缩选项**:
+  - 可调节的压缩级别（ZIP格式）
+  - 排除特定文件模式
+  - 选择性包含隐藏文件
+  - 文件统计和压缩率报告
+- **灵活的解压功能**:
+  - 支持展平目录结构
+  - 选择性解压特定文件
+  - 自定义输出目录
+- **压缩文件管理**:
+  - 列出压缩文件内容
+  - 显示详细的文件信息
+
+### 基本使用方法
+
+压缩文件或目录（默认ZIP格式）：
+```bash
+python file_compress.py -c my_documents
+```
+
+指定压缩格式：
+```bash
+python file_compress.py -c photos -f tar.gz
+```
+
+解压文件：
+```bash
+python file_compress.py -d archive.zip
+```
+
+解压到指定目录：
+```bash
+python file_compress.py -d archive.zip -o extracted_files
+```
+
+查看压缩文件内容：
+```bash
+python file_compress.py -l archive.zip
+```
+
+### 高级用法示例
+
+使用较低压缩级别（更快但文件更大）：
+```bash
+python file_compress.py -c large_folder -f zip --level 1
+```
+
+排除特定文件：
+```bash
+python file_compress.py -c project_dir -e "*.log" "*.tmp" ".git*"
+```
+
+包含隐藏文件：
+```bash
+python file_compress.py -c config_files --include-hidden
+```
+
+解压时展平目录结构：
+```bash
+python file_compress.py -d nested_archive.zip --flatten
+```
+
+只解压特定文件：
+```bash
+python file_compress.py -d backup.tar.gz --files "docs/important.pdf" "images/"
+```
+
+详细查看压缩文件内容：
+```bash
+python file_compress.py -l archive.zip -v
+```
+
+### 完整命令行参数
+
+```
+usage: file_compress.py [-h] (-c | -d | -l) [-o OUTPUT] [-f {zip,tar,tar.gz,tar.bz2}]
+                        [--level {0,1,2,3,4,5,6,7,8,9}] [-e EXCLUDE [EXCLUDE ...]]
+                        [--include-hidden] [--flatten] [--files FILES [FILES ...]]
+                        [-v] path
+
+文件压缩/解压工具
+
+positional arguments:
+  path                  要处理的文件或目录路径
+
+options:
+  -h, --help            显示帮助信息并退出
+  -c, --compress        压缩文件或目录
+  -d, --decompress      解压文件
+  -l, --list            列出压缩文件内容
+  -o, --output          输出文件或目录路径
+  -v, --verbose         详细模式，显示更多信息
+
+压缩选项:
+  -f, --format {zip,tar,tar.gz,tar.bz2}
+                        压缩格式（默认: zip）
+  --level {0,1,2,3,4,5,6,7,8,9}
+                        压缩级别 0-9，9为最高压缩率（仅用于ZIP格式，默认: 9）
+  -e, --exclude EXCLUDE [EXCLUDE ...]
+                        要排除的文件模式列表（如 *.tmp *.log）
+  --include-hidden      包括隐藏文件
+
+解压选项:
+  --flatten             展平目录结构（所有文件直接解压到输出目录）
+  --files FILES [FILES ...]
+                        只解压指定的文件或目录
+```
+
+### 压缩格式说明
+
+- **ZIP (.zip)**: 最通用的压缩格式，支持大多数操作系统和程序。提供良好的压缩率和合理的速度。支持单个文件压缩和加密。
+- **TAR (.tar)**: 仅归档不压缩，通常用于保留文件权限和特性。文件大小基本不变。
+- **TAR.GZ (.tar.gz)**: 使用GZIP算法压缩的TAR文件，提供良好的压缩率和速度，在Linux系统中常用。
+- **TAR.BZ2 (.tar.bz2)**: 使用BZIP2算法压缩的TAR文件，通常比GZIP提供更高的压缩率，但速度较慢。
+
+### 注意事项
+
+- 对大文件进行压缩或解压可能需要较长时间和较多内存
+- ZIP格式在跨平台使用时最兼容
+- 在解压前请确保有足够的磁盘空间
+- 文件路径中包含中文或特殊字符可能在某些环境下导致问题
