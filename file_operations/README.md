@@ -862,3 +862,152 @@ options:
 - ZIP格式在跨平台使用时最兼容
 - 在解压前请确保有足够的磁盘空间
 - 文件路径中包含中文或特殊字符可能在某些环境下导致问题
+
+## file_dupes.py - 文件重复查找工具
+
+这个脚本用于查找目录中的重复文件，支持多种比较方式和重复文件处理选项，可用于清理磁盘空间、整理备份和优化文件存储。
+
+### 功能特点
+
+- **多种文件比较方法**:
+  - 基于文件大小的快速比较
+  - 基于哈希值的精确比较（MD5、SHA1、SHA256算法）
+  - 逐字节内容比较（最精确但速度最慢）
+- **灵活的文件筛选**:
+  - 指定最小文件大小
+  - 排除特定文件模式
+  - 选择性包含隐藏文件
+- **丰富的重复处理选项**:
+  - 生成详细报告（文本、CSV、JSON格式）
+  - 删除重复文件（保留第一个）
+  - 创建硬链接（节省磁盘空间但保持文件路径）
+  - 创建符号链接
+  - 移动重复文件到指定目录
+  - 交互式处理（手动选择每组文件的处理方式）
+- **高效实现**:
+  - 多阶段比较算法（先按大小分组再比较内容）
+  - 哈希值缓存（避免重复计算）
+  - 详细的统计信息和进度报告
+
+### 基本使用方法
+
+查找当前目录中的重复文件：
+```bash
+python file_dupes.py .
+```
+
+扫描多个目录：
+```bash
+python file_dupes.py 文档 图片 下载
+```
+
+查找并删除重复文件：
+```bash
+python file_dupes.py . -p delete
+```
+
+查找并创建硬链接（节省空间）：
+```bash
+python file_dupes.py . -p hardlink
+```
+
+### 高级用法示例
+
+使用SHA256算法进行精确比较：
+```bash
+python file_dupes.py . -m hash -a sha256
+```
+
+忽略小于1MB的文件：
+```bash
+python file_dupes.py . --min-size 1MB
+```
+
+排除特定类型文件：
+```bash
+python file_dupes.py . -e "*.tmp" "*.log" "*.bak"
+```
+
+将重复文件移动到备份目录：
+```bash
+python file_dupes.py . -p move -t ./duplicates
+```
+
+交互式处理重复文件：
+```bash
+python file_dupes.py . -p interactive
+```
+
+生成JSON格式报告：
+```bash
+python file_dupes.py . -f json -o duplicates_report.json
+```
+
+### 完整命令行参数
+
+```
+usage: file_dupes.py [-h] [-r] [--no-recursive] [-m {size,hash,content}]
+                     [-a {md5,sha1,sha256}] [--min-size MIN_SIZE]
+                     [-e EXCLUDE [EXCLUDE ...]] [--include-hidden]
+                     [--follow-symlinks]
+                     [-p {report,delete,hardlink,symlink,move,interactive}]
+                     [-t TARGET_DIR] [-o OUTPUT] [-f {text,csv,json}] [-q] [-v]
+                     directories [directories ...]
+
+文件重复查找工具
+
+positional arguments:
+  directories           要扫描的目录路径列表
+
+options:
+  -h, --help            显示帮助信息并退出
+  -r, --recursive       递归扫描子目录（默认启用）
+  --no-recursive        不递归扫描子目录
+
+比较选项:
+  -m, --method {size,hash,content}
+                        文件比较方法（默认: hash）
+  -a, --algorithm {md5,sha1,sha256}
+                        哈希算法（默认: md5）
+  --min-size MIN_SIZE   最小文件大小，如 1KB、2MB（默认: 1B）
+
+过滤选项:
+  -e, --exclude EXCLUDE [EXCLUDE ...]
+                        要排除的文件模式列表（如 *.tmp *.log）
+  --include-hidden      包括隐藏文件
+  --follow-symlinks     跟随符号链接
+
+处理选项:
+  -p, --process {report,delete,hardlink,symlink,move,interactive}
+                        重复文件处理操作（默认: report）
+  -t, --target-dir      移动重复文件的目标目录（用于move操作）
+
+输出选项:
+  -o, --output          报告输出文件路径
+  -f, --format {text,csv,json}
+                        报告格式（默认: text）
+  -q, --quiet           静默模式，减少输出
+  -v, --verbose         详细模式，显示更多信息
+```
+
+### 比较方法说明
+
+- **size**: 仅比较文件大小。最快但可能产生误报（不同内容的文件可能大小相同）。
+- **hash**: 使用哈希算法比较文件内容。平衡了速度和准确性，适合大多数场景。
+- **content**: 逐字节比较文件内容。最准确但处理大文件时速度较慢。
+
+### 处理操作说明
+
+- **report**: 仅生成重复文件报告，不修改任何文件（默认）。
+- **delete**: 删除所有重复文件，保留每组的第一个文件。
+- **hardlink**: 将重复文件替换为到原始文件的硬链接，节省磁盘空间。
+- **symlink**: 将重复文件替换为到原始文件的符号链接。
+- **move**: 将重复文件移动到指定目录。
+- **interactive**: 交互式处理，对每组重复文件手动选择操作。
+
+### 注意事项
+
+- 删除、硬链接和符号链接操作会修改文件系统，操作前请确保备份重要数据。
+- 硬链接仅在同一文件系统上有效，不能跨驱动器使用。
+- 大型目录的扫描可能需要较长时间和较多内存，特别是使用content比较方法时。
+- 建议先使用默认的report模式查看重复文件，确认无误后再执行其他操作。
