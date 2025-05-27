@@ -1592,3 +1592,219 @@ options:
 - 使用正则表达式或分隔符分割时，请确认模式在文件中确实存在，否则可能不会产生分割
 - 对于非常大的文件（如超过几GB），分割过程可能需要较长时间
 - 确保目标位置有足够的磁盘空间存储分割后的文件
+
+## text_replace.py - 文本批量查找替换工具
+
+这个脚本用于在多个文件中批量查找和替换文本内容，支持普通文本和正则表达式匹配，可以递归处理整个目录结构，并提供详细的替换报告。适用于代码重构、文档更新、内容规范化等场景。
+
+### 功能特点
+
+- **多种替换模式**:
+  - 普通文本替换（自动转义特殊字符）
+  - 正则表达式替换（支持捕获组和反向引用）
+  - 全词匹配替换（仅匹配完整单词）
+  - 整行替换（替换包含匹配文本的整行）
+- **灵活的文件筛选**:
+  - 按文件名模式包含/排除（支持通配符）
+  - 按目录名排除（如忽略版本控制目录）
+  - 按文件大小限制
+  - 可选择性跳过二进制文件
+- **安全操作**:
+  - 文件备份功能
+  - 干运行模式（预览而不实际修改）
+  - 详细的替换前后差异对比
+- **高效处理**:
+  - 并行处理多个文件（多核心利用）
+  - 递归处理子目录
+  - 智能错误处理和恢复
+- **全面的报告**:
+  - 修改文件统计
+  - 替换内容统计
+  - 每个文件的修改行号
+  - 可导出的详细报告
+
+### 基本使用方法
+
+简单文本替换：
+```bash
+python text_replace.py "原始文本" "替换文本" 要处理的文件或目录
+```
+
+使用正则表达式替换：
+```bash
+python text_replace.py -r "pattern\d+" "replacement" 要处理的目录
+```
+
+全词匹配替换：
+```bash
+python text_replace.py -w "word" "newword" 要处理的目录
+```
+
+整行替换：
+```bash
+python text_replace.py -l "包含这段文本的行" "替换为这一整行" 要处理的文件
+```
+
+### 高级用法示例
+
+指定文件类型（仅处理特定文件）：
+```bash
+python text_replace.py "old" "new" 目录 --include "*.py" "*.txt"
+```
+
+排除目录：
+```bash
+python text_replace.py "old" "new" 项目目录 --exclude-dir "node_modules" "build" "dist"
+```
+
+备份原始文件：
+```bash
+python text_replace.py "old" "new" 文件 -b
+```
+
+模拟运行（不实际修改文件）：
+```bash
+python text_replace.py "old" "new" 目录 -n
+```
+
+忽略大小写：
+```bash
+python text_replace.py -i "pattern" "replacement" 文件
+```
+
+显示详细差异：
+```bash
+python text_replace.py "old" "new" 文件 -d
+```
+
+限制替换次数：
+```bash
+python text_replace.py "old" "new" 文件 --limit 5
+```
+
+保存替换报告：
+```bash
+python text_replace.py "old" "new" 目录 -o report.txt
+```
+
+使用并行处理加速：
+```bash
+python text_replace.py "old" "new" 大型目录 --parallel
+```
+
+### 正则表达式替换示例
+
+使用捕获组：
+```bash
+python text_replace.py -r "version\s*=\s*[\"'](\d+\.\d+)[\"']" "version = \"\\1.1\"" 配置文件
+```
+
+替换所有HTML标签：
+```bash
+python text_replace.py -r "<[^>]+>" "" HTML文件
+```
+
+规范化日期格式：
+```bash
+python text_replace.py -r "(\d{1,2})/(\d{1,2})/(\d{4})" "\\3-\\1-\\2" 文档文件
+```
+
+### 完整命令行参数
+
+```
+usage: text_replace.py [-h] [-t | -r | -w | -l] [-i] [--no-recursive]
+                       [--include PATTERN [PATTERN ...]] [--exclude PATTERN [PATTERN ...]]
+                       [--exclude-dir DIR [DIR ...]] [--max-size MAX_SIZE]
+                       [--encoding ENCODING] [--include-binary] [-n] [-b]
+                       [--backup-ext BACKUP_EXT] [--limit LIMIT] [--force]
+                       [--parallel] [-d] [-o OUTPUT] [--summary] [-v] [-q]
+                       search replacement paths [paths ...]
+
+文本批量查找替换工具
+
+positional arguments:
+  search                要查找的文本或正则表达式模式
+  replacement           要替换成的内容
+  paths                 要处理的文件或目录路径列表
+
+替换模式选项:
+  -t, --text            普通文本替换（默认）
+  -r, --regex           正则表达式替换
+  -w, --whole-word      全词匹配替换
+  -l, --line            整行替换（包含匹配文本的整行）
+  -i, --ignore-case     忽略大小写
+
+文件选项:
+  --no-recursive        不递归处理子目录
+  --include PATTERN [PATTERN ...]
+                        要包含的文件模式列表（如 *.txt）
+  --exclude PATTERN [PATTERN ...]
+                        要排除的文件模式列表
+  --exclude-dir DIR [DIR ...]
+                        要排除的目录名列表
+  --max-size MAX_SIZE   处理的最大文件大小（如 1MB）
+  --encoding ENCODING   文件编码（默认: utf-8）
+  --include-binary      也处理二进制文件（默认跳过）
+
+操作选项:
+  -n, --dry-run         模拟运行，不实际修改文件
+  -b, --backup          备份原始文件
+  --backup-ext BACKUP_EXT
+                        备份文件扩展名（默认: .bak）
+  --limit LIMIT         每个文件最多替换的匹配次数（默认: 无限制）
+  --force               忽略错误并继续处理
+  --parallel            使用并行处理（多核处理）
+
+输出选项:
+  -d, --diff            显示详细的替换差异
+  -o, --output OUTPUT   将报告保存到指定文件
+  --summary             仅显示摘要信息
+  -v, --verbose         显示详细信息
+  -q, --quiet           静默模式
+```
+
+### 使用场景
+
+1. **代码重构**
+   - 重命名变量、函数或类名
+   - 更新API调用方式
+   - 修改代码格式或风格
+   
+   ```bash
+   python text_replace.py -r "oldFunction\((.*?)\)" "newFunction(\\1, config)" --include "*.js" "*.ts" src/
+   ```
+
+2. **文档更新**
+   - 更新版本号、日期或联系信息
+   - 统一格式和术语
+   - 修正错误或过时信息
+   
+   ```bash
+   python text_replace.py "旧产品名称" "新产品名称" --include "*.md" "*.txt" docs/ -b
+   ```
+
+3. **配置管理**
+   - 更新连接字符串
+   - 修改服务器地址或路径
+   - 调整日志记录等级或格式
+   
+   ```bash
+   python text_replace.py "dev.example.com" "prod.example.com" --include "*.yml" "*.properties" config/ -n -d
+   ```
+
+4. **清理和规范化**
+   - 标准化空格和缩进
+   - 移除调试代码或注释
+   - 规范化数据格式
+   
+   ```bash
+   python text_replace.py -r "\s+$" "" --include "*.py" "*.java" . --parallel
+   ```
+
+### 注意事项
+
+- 在进行大规模替换前，始终使用`--dry-run`选项预览替换效果
+- 处理重要文件时建议启用`--backup`选项
+- 正则表达式替换时，需要特别注意特殊字符的转义
+- 某些大型文本文件的处理可能会消耗较多内存
+- 对于特殊的文本编码，务必使用`--encoding`选项指定正确的编码
