@@ -57,7 +57,7 @@ options:
   -e EXCLUDE [EXCLUDE ...], --exclude EXCLUDE [EXCLUDE ...]
                         排除的目录名列表
   --include-hidden      包括隐藏文件
-``` 
+```
 
 ## batch_rename.py - 批量文件重命名工具
 
@@ -208,7 +208,7 @@ options:
                         替换文件名中的空格（默认替换为下划线）
   --list-history        显示历史重命名记录
   --undo ID             撤销指定的重命名操作（使用--list-history查看可用ID）
-``` 
+```
 
 ## file_finder.py - 文件搜索工具
 
@@ -355,7 +355,7 @@ options:
   -d, --details         显示详细信息
   --show-matches        显示内容匹配行
   -o, --output OUTPUT   将结果保存到文件
-``` 
+```
 
 ## file_compare.py - 文件比较工具
 
@@ -1415,3 +1415,180 @@ options:
 - 删除重复行功能在处理大量数据时可能会降低性能
 - 某些编码转换可能导致字符丢失，请确保正确指定输入和输出编码
 - 默认情况下，合并后的文件会包含生成信息头部，可以使用 `--no-warning` 禁用
+
+## file_split.py - 文件分割工具
+
+这个脚本用于将大型文件分割成多个较小的文件，支持多种分割方式，包括按行数、大小、内容分割等。适用于处理大型日志、数据集和二进制文件。
+
+### 功能特点
+
+- **多种分割模式**:
+  - 按行数分割（适用于文本文件）
+  - 按大小分割（适用于任何文件）
+  - 按文件数量均分（自动计算分割点）
+  - 按正则表达式模式分割（在匹配处拆分）
+  - 按分隔符分割（类似于文本处理中的split操作）
+  - 按指定字节位置分割（精确控制分割点）
+- **灵活的文件处理**:
+  - 自动检测文本和二进制文件
+  - 支持多种文件编码
+  - 可选择保留原始文件表头
+  - 可添加自定义页眉和页脚
+  - 支持压缩输出文件
+- **智能文件命名**:
+  - 自定义文件名格式
+  - 支持序号、日期、时间变量
+  - 保留原始文件扩展名
+- **用户友好功能**:
+  - 详细的分割进度和统计信息
+  - 输出文件统一放置于指定目录
+  - 可定制的错误处理策略
+
+### 基本使用方法
+
+按行数分割文本文件（每个文件1000行）：
+```bash
+python file_split.py large_log.txt -l 1000
+```
+
+按大小分割文件（每个文件10MB）：
+```bash
+python file_split.py large_file.dat -s 10MB
+```
+
+将文件平均分成5个部分：
+```bash
+python file_split.py dataset.csv -n 5
+```
+
+指定输出目录：
+```bash
+python file_split.py large_video.mp4 -s 700MB -o "D:\分割文件"
+```
+
+### 高级用法示例
+
+按特定分隔符分割：
+```bash
+python file_split.py log_file.txt -d "----------SESSION END----------"
+```
+
+按正则表达式模式分割：
+```bash
+python file_split.py data.xml -r "<\/record>"
+```
+
+保留CSV表头在每个分割文件中：
+```bash
+python file_split.py large_data.csv -l 5000 --preserve-headers
+```
+
+指定表头行数：
+```bash
+python file_split.py report.csv -l 1000 --preserve-headers --header-lines 3
+```
+
+压缩输出文件：
+```bash
+python file_split.py large_log.txt -l 10000 -c
+```
+
+自定义输出文件名格式：
+```bash
+python file_split.py source.txt -l 500 -p "{basename}_part{num}_{date}{extension}"
+```
+
+按具体字节位置分割：
+```bash
+python file_split.py binary_file.bin -b "1048576,2097152,3145728"
+```
+
+添加自定义页眉和页脚：
+```bash
+python file_split.py document.txt -l 500 --custom-header "--- 分割文件 ---\n" --custom-footer "\n--- 文件结束 ---"
+```
+
+### 完整命令行参数
+
+```
+usage: file_split.py [-h] [-o OUTPUT_DIR] [-p OUTPUT_PATTERN]
+                    [-l LINES | -s SIZE | -n NUMBER | -d DELIMITER | -r REGEX_PATTERN | -b BYTE_POSITIONS]
+                    [-t {auto,text,binary}] [-e ENCODING]
+                    [--include-header] [--include-footer]
+                    [--custom-header CUSTOM_HEADER] [--custom-footer CUSTOM_FOOTER]
+                    [--preserve-headers] [--header-lines HEADER_LINES] [-c] [-v]
+                    file
+
+文件分割工具
+
+positional arguments:
+  file                  要分割的文件路径
+
+options:
+  -h, --help            显示帮助信息并退出
+  -o, --output-dir      输出目录路径（默认为源文件所在目录）
+  -p, --output-pattern  输出文件名模式（可用变量：{basename}, {num}, {extension}, {date}, {time}）
+
+分割模式（选择一种）:
+  -l, --lines           按行数分割（每个文件的行数）
+  -s, --size            按大小分割（每个文件的大小，如 1MB）
+  -n, --number          按数量平均分割（分割成的文件数量）
+  -d, --delimiter       按分隔符分割（如 "---分隔符---"）
+  -r, --regex-pattern   按正则表达式模式分割（在匹配位置拆分）
+  -b, --byte-positions  按字节位置分割（逗号分隔的位置列表）
+
+文件类型选项:
+  -t, --type {auto,text,binary}
+                        指定文件类型（默认: auto）
+  -e, --encoding        文本文件编码（默认: utf-8）
+
+输出选项:
+  --include-header      在分割文件中包含源文件头部
+  --include-footer      在分割文件中包含源文件尾部
+  --custom-header       自定义内容添加到每个分割文件的开头
+  --custom-footer       自定义内容添加到每个分割文件的结尾
+  --preserve-headers    在每个分割文件中保留表头（仅对文本文件有效）
+  --header-lines        表头的行数（默认: 1）
+  -c, --compress        压缩输出文件（使用gzip）
+  -v, --verbose         显示详细信息
+```
+
+### 使用场景
+
+1. **大型日志文件处理**:
+   将庞大的服务器日志文件按会话或日期分割，便于分析特定时段的问题。
+   ```bash
+   python file_split.py server.log -r "\[\d{4}-\d{2}-\d{2}\]" -v
+   ```
+
+2. **数据集分割**:
+   将大型CSV数据集分割成小块进行并行处理或分批导入数据库。
+   ```bash
+   python file_split.py dataset.csv -l 10000 --preserve-headers
+   ```
+
+3. **备份文件分段**:
+   将大型备份文件分割成适合存储介质（如U盘、DVD）的大小。
+   ```bash
+   python file_split.py backup.zip -s 4GB
+   ```
+
+4. **多媒体文件处理**:
+   将大型视频或音频文件分割成较小的片段。
+   ```bash
+   python file_split.py video.mp4 -s 700MB
+   ```
+
+5. **数据传输优化**:
+   将大文件分割成小块以便于在网络带宽有限的情况下传输。
+   ```bash
+   python file_split.py large_file.iso -s 100MB -c
+   ```
+
+### 注意事项
+
+- 处理文本文件时，请确保指定正确的文件编码，否则可能导致字符丢失或乱码
+- 按行分割仅适用于文本文件，对二进制文件请使用按大小分割
+- 使用正则表达式或分隔符分割时，请确认模式在文件中确实存在，否则可能不会产生分割
+- 对于非常大的文件（如超过几GB），分割过程可能需要较长时间
+- 确保目标位置有足够的磁盘空间存储分割后的文件
