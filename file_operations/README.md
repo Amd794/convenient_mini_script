@@ -1808,3 +1808,249 @@ positional arguments:
 - 正则表达式替换时，需要特别注意特殊字符的转义
 - 某些大型文本文件的处理可能会消耗较多内存
 - 对于特殊的文本编码，务必使用`--encoding`选项指定正确的编码
+
+## image_processor.py - 图像批处理工具
+
+这个脚本提供了批量处理图像的功能，支持调整大小、格式转换、添加水印、应用滤镜效果等操作。适用于摄影作品整理、网站图片优化、社交媒体内容准备等场景。
+
+### 功能特点
+
+- **多种调整大小方式**:
+  - 按百分比缩放（等比例缩放）
+  - 调整为精确尺寸（可能改变纵横比）
+  - 适应指定尺寸（保持纵横比，不裁剪）
+  - 填充指定尺寸（保持纵横比，可能裁剪）
+  - 仅调整宽度或高度（保持纵横比）
+- **格式转换与优化**:
+  - 支持常见图像格式间的转换（JPG、PNG、GIF、BMP、TIFF、WEBP等）
+  - 调整压缩质量
+  - 批量统一格式
+- **水印功能**:
+  - 文本水印（支持自定义文字、字体、大小、颜色、位置、透明度）
+  - 图像水印（支持自定义图像、位置、透明度）
+  - 多种预设位置（角落、中心、平铺等）
+- **图像增强与特效**:
+  - 应用多种滤镜（模糊、锐化、轮廓、浮雕等）
+  - 调整亮度、对比度、色彩饱和度、锐度
+  - 旋转和翻转
+- **元数据处理**:
+  - 保留或移除EXIF数据
+  - 添加作者、版权等信息
+- **高效批处理**:
+  - 多线程并行处理
+  - 递归处理整个目录结构
+  - 自定义输出命名格式
+  - 灵活的文件筛选
+
+### 基本使用方法
+
+调整图像大小（保持纵横比）：
+```bash
+python image_processor.py images/ --resize-percent 50
+```
+
+转换图像格式：
+```bash
+python image_processor.py images/*.jpg --output-format png
+```
+
+添加文本水印：
+```bash
+python image_processor.py images/ --text-watermark "© 2023 版权所有"
+```
+
+应用滤镜效果：
+```bash
+python image_processor.py images/ --filter grayscale
+```
+
+### 高级用法示例
+
+适应指定尺寸（保持纵横比）：
+```bash
+python image_processor.py images/ --resize-fit 800 600
+```
+
+填充指定尺寸（保持纵横比，可能裁剪）：
+```bash
+python image_processor.py images/ --resize-fill 1200 628
+```
+
+添加自定义位置的水印：
+```bash
+python image_processor.py images/ --text-watermark "机密文件" --watermark-position center --font-size 48
+```
+
+使用图像作为水印：
+```bash
+python image_processor.py images/ --image-watermark logo.png --watermark-position bottom-right --watermark-opacity 30
+```
+
+调整图像亮度和对比度：
+```bash
+python image_processor.py images/ --brightness 1.2 --contrast 1.1
+```
+
+批量将图像转换为网页优化的WebP格式：
+```bash
+python image_processor.py images/ --output-format webp --quality 80
+```
+
+只处理特定类型的图像：
+```bash
+python image_processor.py images/ --include "*.jpg" "*.png" --resize-width 1200
+```
+
+多线程加速处理：
+```bash
+python image_processor.py large_image_folder/ --threads 4 --resize-percent 75
+```
+
+### 完整命令行参数
+
+```
+usage: image_processor.py [-h] [-r] [-v] [-n] [-t THREADS]
+                         [--same-dir | --subfolder OUTPUT_SUBFOLDER | --output-dir OUTPUT_DIR | --replace]
+                         [--output-format OUTPUT_FORMAT] [--quality QUALITY]
+                         [--output-pattern OUTPUT_PATTERN]
+                         [-i PATTERN [PATTERN ...]] [-e PATTERN [PATTERN ...]]
+                         [--resize-percent RESIZE_PERCENT | --resize-exact WIDTH HEIGHT | --resize-fit WIDTH HEIGHT | --resize-fill WIDTH HEIGHT | --resize-width RESIZE_WIDTH | --resize-height RESIZE_HEIGHT]
+                         [--text-watermark TEXT_WATERMARK | --image-watermark IMAGE_WATERMARK]
+                         [--watermark-position {top-left,top-center,top-right,center-left,center,center-right,bottom-left,bottom-center,bottom-right,tiled,custom}]
+                         [--watermark-opacity WATERMARK_OPACITY]
+                         [--font-size FONT_SIZE] [--font-path FONT_PATH]
+                         [--text-color TEXT_COLOR]
+                         [--filter {blur,sharpen,contour,detail,edge,emboss,smooth,grayscale,sepia,negative}]
+                         [--brightness BRIGHTNESS] [--contrast CONTRAST]
+                         [--color COLOR] [--sharpness SHARPNESS] [--rotate ROTATE]
+                         [--flip-horizontal] [--flip-vertical] [--strip-exif]
+                         [--exif-author EXIF_AUTHOR] [--exif-copyright EXIF_COPYRIGHT]
+                         input_paths [input_paths ...]
+
+图像批处理工具 - 批量调整图像大小、格式转换、添加水印等
+
+positional arguments:
+  input_paths           输入图像或目录路径列表
+
+options:
+  -h, --help            显示帮助信息并退出
+  -r, --recursive       递归处理子目录
+  -v, --verbose         显示详细信息
+  -n, --dry-run         模拟运行，不实际修改文件
+  -t, --threads THREADS 处理线程数（默认: 1）
+
+输出选项:
+  --same-dir            输出到原目录
+  --subfolder OUTPUT_SUBFOLDER
+                        输出到子文件夹（默认: processed_images）
+  --output-dir OUTPUT_DIR
+                        输出到自定义目录
+  --replace             替换原始文件
+  --output-format OUTPUT_FORMAT
+                        输出格式（如 jpg, png, webp）
+  --quality QUALITY     输出质量 1-100（默认: 85）
+  --output-pattern OUTPUT_PATTERN
+                        输出文件名模式（默认: "{basename}{suffix}{extension}"）
+
+文件过滤选项:
+  -i, --include PATTERN [PATTERN ...]
+                        要包含的文件模式列表（如 *.jpg）
+  -e, --exclude PATTERN [PATTERN ...]
+                        要排除的文件模式列表
+
+调整大小选项:
+  --resize-percent RESIZE_PERCENT
+                        按百分比调整大小（如50表示缩小一半）
+  --resize-exact WIDTH HEIGHT
+                        调整为精确尺寸（可能改变纵横比）
+  --resize-fit WIDTH HEIGHT
+                        适应指定尺寸（保持纵横比，不裁剪）
+  --resize-fill WIDTH HEIGHT
+                        填充指定尺寸（保持纵横比，可能裁剪）
+  --resize-width RESIZE_WIDTH
+                        指定宽度（保持纵横比）
+  --resize-height RESIZE_HEIGHT
+                        指定高度（保持纵横比）
+
+水印选项:
+  --text-watermark TEXT_WATERMARK
+                        文本水印内容
+  --image-watermark IMAGE_WATERMARK
+                        图像水印文件路径
+  --watermark-position {top-left,top-center,top-right,center-left,center,center-right,bottom-left,bottom-center,bottom-right,tiled,custom}
+                        水印位置（默认: bottom-right）
+  --watermark-opacity WATERMARK_OPACITY
+                        水印不透明度 0-100（默认: 50）
+  --font-size FONT_SIZE
+                        文本水印字体大小（默认: 36）
+  --font-path FONT_PATH
+                        文本水印字体文件路径
+  --text-color TEXT_COLOR
+                        文本水印颜色（默认: white）
+
+图像处理选项:
+  --filter {blur,sharpen,contour,detail,edge,emboss,smooth,grayscale,sepia,negative}
+                        应用滤镜效果
+  --brightness BRIGHTNESS
+                        调整亮度（0.0-2.0，1.0为原始亮度）
+  --contrast CONTRAST   调整对比度（0.0-2.0，1.0为原始对比度）
+  --color COLOR         调整色彩（0.0-2.0，1.0为原始色彩）
+  --sharpness SHARPNESS
+                        调整锐度（0.0-2.0，1.0为原始锐度）
+  --rotate ROTATE       旋转角度（度，顺时针）
+  --flip-horizontal     水平翻转
+  --flip-vertical       垂直翻转
+
+EXIF选项:
+  --strip-exif          移除EXIF元数据
+  --exif-author EXIF_AUTHOR
+                        设置作者信息
+  --exif-copyright EXIF_COPYRIGHT
+                        设置版权信息
+```
+
+### 使用场景
+
+1. **网站图片优化**
+   - 批量调整图片尺寸适应网站需求
+   - 转换为WebP格式以提高加载速度
+   - 添加版权水印保护知识产权
+   
+   ```bash
+   python image_processor.py website_images/ --resize-width 1200 --output-format webp --quality 80 --text-watermark "© 公司名称" --watermark-opacity 30
+   ```
+
+2. **社交媒体内容准备**
+   - 调整图片尺寸以适应不同平台
+   - 应用特效增强视觉吸引力
+   - 添加品牌水印
+   
+   ```bash
+   python image_processor.py marketing_photos/ --resize-fill 1080 1080 --filter detail --brightness 1.1 --contrast 1.2 --image-watermark brand_logo.png
+   ```
+
+3. **产品图片批处理**
+   - 统一产品图片尺寸和格式
+   - 增强图片细节和清晰度
+   - 移除敏感EXIF数据
+   
+   ```bash
+   python image_processor.py product_photos/ --resize-fit 2000 2000 --filter sharpen --strip-exif --output-format jpg --quality 90
+   ```
+
+4. **摄影作品批量处理**
+   - 批量添加摄影师水印
+   - 应用特定滤镜风格
+   - 调整尺寸用于展示
+   
+   ```bash
+   python image_processor.py -r photos/ --text-watermark "摄影师姓名" --filter sepia --resize-percent 50 --exif-copyright "版权所有，未经许可禁止使用"
+   ```
+
+### 注意事项
+
+- 在进行批量处理前，建议先使用`--dry-run`选项预览将要执行的操作
+- 处理高分辨率图像或大量图像时，可能需要较长时间和较多内存
+- 使用`--replace`选项时请格外小心，原始文件将被替换
+- 水印位置和大小可能需要根据图像内容进行调整
+- 对于非常大的目录，建议使用`--threads`选项启用多线程处理
