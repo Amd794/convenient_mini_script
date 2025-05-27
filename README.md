@@ -30,6 +30,7 @@
 - **[file_dupes.py](file_operations/file_dupes.py)**: 文件重复查找工具，支持多种文件比较方式和处理选项，可帮助清理磁盘空间、移除重复文件并生成详细的重复文件报告。[详情](file_operations/README.md)
 - **[file_monitor.py](file_operations/file_monitor.py)**: 文件监控工具，实时监测指定目录中的文件变化（创建、修改、删除、重命名），可在文件变化时自动记录、备份或执行自定义操作。[详情](file_operations/README.md)
 - **[text_merger.py](file_operations/text_merger.py)**: 文本文件合并工具，支持多种排序方式、分隔符选项和文本处理功能，适用于日志整合、文档汇编和数据收集等场景。[详情](file_operations/README.md)
+- **[file_split.py](file_operations/file_split.py)**: 文件分割工具，支持按行数、大小、内容特征等多种方式分割大型文件，具有智能文件命名、表头保留和分割预览等功能，适用于处理大型日志、数据集和二进制文件。[详情](file_operations/README.md)
 
 ### 系统工具
 
