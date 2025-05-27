@@ -983,7 +983,7 @@ options:
   -t, --target-dir      移动重复文件的目标目录（用于move操作）
 
 输出选项:
-  -o, --output          报告输出文件路径
+  -o, --output OUTPUT   报告输出文件路径
   -f, --format {text,csv,json}
                         报告格式（默认: text）
   -q, --quiet           静默模式，减少输出
@@ -1207,3 +1207,211 @@ pip install watchdog
 - 在Windows系统上，某些操作（如编辑并保存文件）可能会触发多个事件
 - 桌面通知功能在不同操作系统上可能需要额外的依赖库
 - 当使用备份功能时，请确保有足够的磁盘空间存储备份文件
+
+## text_merger.py - 文本文件合并工具
+
+这个脚本用于将多个文本文件合并成一个文件，支持各种合并方式、文件排序方法、分隔符选项和文本处理功能。适用于日志整合、文档汇编、数据收集等场景。
+
+### 功能特点
+
+- **灵活的文件排序**:
+  - 按文件名排序
+  - 按文件大小排序
+  - 按修改时间排序
+  - 自定义排序顺序
+- **多种文件分隔方式**:
+  - 空行分隔
+  - 自定义分隔符
+  - 文件名作为分隔标题
+  - 带框的文件名标题
+  - 标记行分隔（如横线）
+- **强大的文本处理功能**:
+  - 删除空行和重复行
+  - 修剪行（删除首尾空白）
+  - 添加行前缀和后缀
+  - 根据正则表达式过滤内容
+  - 限制行长度
+  - 删除HTML标签
+  - 转换制表符为空格
+  - 添加行号
+  - 行包装
+- **完善的输入/输出控制**:
+  - 支持不同的文件编码
+  - 可添加自定义页眉和页脚
+  - 输出到文件或标准输出
+  - 自动生成文件来源信息
+
+### 基本使用方法
+
+合并多个文本文件：
+```bash
+python text_merger.py file1.txt file2.txt file3.txt -o merged.txt
+```
+
+合并并按大小排序：
+```bash
+python text_merger.py *.txt -o merged.txt -s size
+```
+
+合并并按修改时间逆序排序（最新的文件在前）：
+```bash
+python text_merger.py *.log -o merged.log -s modified -r
+```
+
+使用文件名作为分隔标题：
+```bash
+python text_merger.py *.md -o merged.md --separator filename
+```
+
+### 高级用法示例
+
+删除重复行和空行：
+```bash
+python text_merger.py *.txt -o clean.txt --remove-duplicate-lines --remove-empty-lines
+```
+
+只包含匹配特定模式的行：
+```bash
+python text_merger.py error*.log -o errors_only.log --include "ERROR|CRITICAL" --ignore-case
+```
+
+添加行号并限制行长度：
+```bash
+python text_merger.py source.txt -o numbered.txt --number-lines --max-line-length 80
+```
+
+添加自定义页眉和页脚：
+```bash
+python text_merger.py *.txt -o report.txt --header "===== 合并报告 =====" --footer "===== 报告结束 ====="
+```
+
+使用自定义分隔符：
+```bash
+python text_merger.py *.txt -o merged.txt --separator custom --custom-separator "\n\n===== 下一个文件 =====\n\n"
+```
+
+将表格数据合并为CSV（删除空行，修剪空白）：
+```bash
+python text_merger.py table*.txt -o combined.csv --remove-empty-lines --trim-lines
+```
+
+### 完整命令行参数
+
+```
+usage: text_merger.py [-h] [-o OUTPUT] [-s {name,size,modified,custom}] [-r]
+                      [--custom-order CUSTOM_ORDER [CUSTOM_ORDER ...]]
+                      [--separator {none,newline,custom,filename,filename_box,marker_line}]
+                      [--custom-separator CUSTOM_SEPARATOR]
+                      [--file-encoding FILE_ENCODING]
+                      [--output-encoding OUTPUT_ENCODING]
+                      [--remove-empty-lines] [--remove-duplicate-lines]
+                      [--trim-lines] [--line-prefix LINE_PREFIX]
+                      [--line-suffix LINE_SUFFIX] [--include INCLUDE]
+                      [--exclude EXCLUDE] [--ignore-case]
+                      [--max-line-length MAX_LINE_LENGTH] [--remove-html]
+                      [--convert-tabs] [--tab-size TAB_SIZE] [--number-lines]
+                      [--wrap-lines WRAP_LINES] [--skip-errors]
+                      [--header HEADER] [--header-file HEADER_FILE]
+                      [--footer FOOTER] [--footer-file FOOTER_FILE]
+                      [--no-warning] [-q] [-v]
+                      files [files ...]
+
+文本文件合并工具
+
+positional arguments:
+  files                 要合并的文件列表
+
+options:
+  -h, --help            显示帮助信息并退出
+  -o, --output OUTPUT   输出文件路径（如果省略则输出到标准输出）
+
+排序选项:
+  -s, --sort {name,size,modified,custom}
+                        文件排序方法（默认: name）
+  -r, --reverse         逆序排序
+  --custom-order CUSTOM_ORDER [CUSTOM_ORDER ...]
+                        自定义文件排序顺序（仅当sort=custom时有效）
+
+分隔符选项:
+  --separator {none,newline,custom,filename,filename_box,marker_line}
+                        文件分隔符类型（默认: newline）
+  --custom-separator CUSTOM_SEPARATOR
+                        自定义分隔符（当separator=custom时使用）
+
+编码选项:
+  --file-encoding FILE_ENCODING
+                        输入文件编码（默认: utf-8）
+  --output-encoding OUTPUT_ENCODING
+                        输出文件编码（默认: utf-8）
+
+处理选项:
+  --remove-empty-lines  删除空行
+  --remove-duplicate-lines
+                        删除重复行
+  --trim-lines          修剪行（删除首尾空白）
+  --line-prefix LINE_PREFIX
+                        添加到每行开头的前缀
+  --line-suffix LINE_SUFFIX
+                        添加到每行结尾的后缀
+  --include INCLUDE     包含正则表达式模式（仅包含匹配的行）
+  --exclude EXCLUDE     排除正则表达式模式（排除匹配的行）
+  --ignore-case         正则表达式忽略大小写
+  --max-line-length MAX_LINE_LENGTH
+                        最大行长度（截断更长的行）
+  --remove-html         删除HTML标签
+  --convert-tabs        将制表符转换为空格
+  --tab-size TAB_SIZE   制表符大小（默认: 4）
+  --number-lines        添加行号
+  --wrap-lines WRAP_LINES
+                        行包装宽度（每行最大字符数）
+
+其他选项:
+  --skip-errors         跳过处理错误
+  --header HEADER       添加到输出文件开头的文本
+  --header-file HEADER_FILE
+                        从文件读取要添加到输出文件开头的文本
+  --footer FOOTER       添加到输出文件结尾的文本
+  --footer-file FOOTER_FILE
+                        从文件读取要添加到输出文件结尾的文本
+  --no-warning          不添加生成文件的警告注释
+  -q, --quiet           静默模式，减少输出
+  -v, --verbose         详细模式，显示更多信息
+```
+
+### 分隔符类型说明
+
+- **none**: 不添加分隔符，文件内容直接连接
+- **newline**: 在文件之间添加一个空行（默认）
+- **custom**: 使用自定义分隔符
+- **filename**: 使用文件名作为分隔标题（例如：`# file.txt`）
+- **filename_box**: 使用带框的文件名（例如：`+--------+`、`| file.txt |`、`+--------+`）
+- **marker_line**: 使用横线作为分隔符（例如：`----------------`）
+
+### 使用场景
+
+1. **日志分析**：合并多个日志文件，按时间顺序排列，并筛选出包含特定关键词的行
+   ```bash
+   python text_merger.py log*.txt -o combined_logs.txt -s modified --include "error|warning" --ignore-case
+   ```
+
+2. **源代码合并**：合并多个源代码文件，添加文件名作为标题，去除注释行
+   ```bash
+   python text_merger.py *.py -o full_source.txt --separator filename --exclude "^\s*#"
+   ```
+
+3. **数据整理**：合并CSV数据文件，删除重复的标题行，修剪空白字符
+   ```bash
+   python text_merger.py data*.csv -o merged_data.csv --exclude "^id,name,value" --trim-lines
+   ```
+
+4. **文档汇编**：将多个Markdown文件合并为一个文档，添加适当的标题分隔
+   ```bash
+   python text_merger.py chapter*.md -o book.md --separator filename_box
+   ```
+
+### 注意事项
+
+- 处理大型文件时可能会消耗较多内存
+- 删除重复行功能在处理大量数据时可能会降低性能
+- 某些编码转换可能导致字符丢失，请确保正确指定输入和输出编码
+- 默认情况下，合并后的文件会包含生成信息头部，可以使用 `--no-warning` 禁用

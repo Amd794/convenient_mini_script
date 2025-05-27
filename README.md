@@ -29,6 +29,7 @@
 - **[file_compress.py](file_operations/file_compress.py)**: 文件压缩/解压工具，支持多种压缩格式（ZIP、TAR、TAR.GZ、TAR.BZ2），提供灵活的压缩选项和解压功能，适用于文件备份、共享和存储空间优化。[详情](file_operations/README.md)
 - **[file_dupes.py](file_operations/file_dupes.py)**: 文件重复查找工具，支持多种文件比较方式和处理选项，可帮助清理磁盘空间、移除重复文件并生成详细的重复文件报告。[详情](file_operations/README.md)
 - **[file_monitor.py](file_operations/file_monitor.py)**: 文件监控工具，实时监测指定目录中的文件变化（创建、修改、删除、重命名），可在文件变化时自动记录、备份或执行自定义操作。[详情](file_operations/README.md)
+- **[text_merger.py](file_operations/text_merger.py)**: 文本文件合并工具，支持多种排序方式、分隔符选项和文本处理功能，适用于日志整合、文档汇编和数据收集等场景。[详情](file_operations/README.md)
 
 ### 系统工具
 
