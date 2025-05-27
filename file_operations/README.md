@@ -831,7 +831,7 @@ options:
   -c, --compress        压缩文件或目录
   -d, --decompress      解压文件
   -l, --list            列出压缩文件内容
-  -o, --output          输出文件或目录路径
+  -o, --output OUTPUT   输出文件或目录路径
   -v, --verbose         详细模式，显示更多信息
 
 压缩选项:
@@ -1011,3 +1011,199 @@ options:
 - 硬链接仅在同一文件系统上有效，不能跨驱动器使用。
 - 大型目录的扫描可能需要较长时间和较多内存，特别是使用content比较方法时。
 - 建议先使用默认的report模式查看重复文件，确认无误后再执行其他操作。
+
+## file_monitor.py - 文件监控工具
+
+这个脚本用于实时监控指定目录中的文件变化（创建、修改、删除、重命名等），并可以在文件发生变化时记录或执行指定操作。适用于自动备份、开发监控、日志跟踪等场景。
+
+### 功能特点
+
+- **实时监控文件变化**:
+  - 监控文件创建、修改、删除和移动事件
+  - 支持递归监控子目录
+  - 可单独监控文件或目录变化
+- **精细的过滤系统**:
+  - 按文件名模式过滤（通配符支持）
+  - 按文件大小范围过滤
+  - 可选择性包含隐藏文件
+  - 按事件类型过滤
+- **多种响应操作**:
+  - 日志记录（控制台、文件或JSON格式）
+  - 自动备份变化的文件
+  - 执行自定义命令
+  - 发送桌面通知
+- **高级功能**:
+  - 批处理模式（收集一段时间内的事件后一次处理）
+  - 冷却时间设置（防止频繁触发）
+  - 详细的事件统计
+
+### 使用场景
+
+1. **开发辅助**:
+   - 监控源代码变化并自动运行测试或构建
+   - 监控配置文件变化并自动重启服务
+   - 实时预览开发效果
+
+2. **数据安全**:
+   - 监控重要文件变化并自动备份
+   - 记录敏感目录的访问和修改行为
+   - 检测异常文件操作
+
+3. **自动化工作流**:
+   - 监控下载文件夹并自动分类处理新文件
+   - 监控共享目录变化并执行后续处理
+   - 图片或视频文件变化时自动转换格式
+
+### 基本使用方法
+
+监控单个目录：
+```bash
+python file_monitor.py 要监控的目录
+```
+
+监控多个目录：
+```bash
+python file_monitor.py 目录1 目录2 目录3
+```
+
+监控特定类型的文件：
+```bash
+python file_monitor.py --include "*.txt" "*.log" 要监控的目录
+```
+
+排除特定类型的文件：
+```bash
+python file_monitor.py --exclude "*.tmp" "*.bak" 要监控的目录
+```
+
+### 高级用法示例
+
+仅监控文件创建和删除事件：
+```bash
+python file_monitor.py --event-types created deleted 要监控的目录
+```
+
+监控文件变化并自动备份：
+```bash
+python file_monitor.py -b --backup-dir "备份目录" 要监控的目录
+```
+
+监控并执行自定义命令：
+```bash
+python file_monitor.py -c "echo 文件 {filename} 已变化" 要监控的目录
+```
+
+将监控日志保存到文件：
+```bash
+python file_monitor.py -l file --log-file "监控日志.txt" 要监控的目录
+```
+
+启用批处理模式（减少频繁处理）：
+```bash
+python file_monitor.py --batch --batch-timeout 10 要监控的目录
+```
+
+监控大型文件的变化：
+```bash
+python file_monitor.py --min-size 10MB 要监控的目录
+```
+
+启用桌面通知：
+```bash
+python file_monitor.py -n 要监控的目录
+```
+
+设置监控超时时间：
+```bash
+python file_monitor.py -t 3600 要监控的目录  # 监控1小时后自动停止
+```
+
+### 完整命令行参数
+
+```
+usage: file_monitor.py [-h] [-r] [--no-recursive] [-t TIMEOUT] [-i INCLUDE [INCLUDE ...]]
+                        [-e EXCLUDE [EXCLUDE ...]] [--include-hidden]
+                        [--event-types {created,modified,deleted,moved,all} [{created,modified,deleted,moved,all} ...]]
+                        [--file-types {file,directory,all} [{file,directory,all} ...]]
+                        [--min-size MIN_SIZE] [--max-size MAX_SIZE] [--cooldown COOLDOWN]
+                        [--batch] [--batch-timeout BATCH_TIMEOUT]
+                        [-l {console,file}] [--log-file LOG_FILE] [--json-log JSON_LOG]
+                        [-b] [--backup-dir BACKUP_DIR] [-c COMMAND] [-n]
+                        [-q] [-v]
+                        paths [paths ...]
+
+文件监控工具
+
+positional arguments:
+  paths                 要监控的路径列表
+
+options:
+  -h, --help            显示帮助信息并退出
+  -r, --recursive       递归监控子目录（默认启用）
+  --no-recursive        不递归监控子目录
+  -t, --timeout TIMEOUT 监控超时时间（秒），0表示一直运行（默认）
+
+过滤选项:
+  -i, --include INCLUDE [INCLUDE ...]
+                        要包含的文件模式列表（如 *.txt *.log）
+  -e, --exclude EXCLUDE [EXCLUDE ...]
+                        要排除的文件模式列表（如 *.tmp *.bak）
+  --include-hidden      包括隐藏文件
+  --event-types {created,modified,deleted,moved,all} [{created,modified,deleted,moved,all} ...]
+                        要监控的事件类型列表
+  --file-types {file,directory,all} [{file,directory,all} ...]
+                        要监控的文件类型列表
+  --min-size MIN_SIZE   最小文件大小，如 1KB、2MB（默认: 0）
+  --max-size MAX_SIZE   最大文件大小，如 10MB、1GB
+  --cooldown COOLDOWN   相同文件两次事件间的最小冷却时间（秒）（默认: 1）
+
+批处理选项:
+  --batch               批处理模式，收集一段时间内的事件后一次处理
+  --batch-timeout BATCH_TIMEOUT
+                        批处理超时时间（秒）（默认: 5）
+
+操作选项:
+  -l, --log {console,file}
+                        日志输出目标（默认: console）
+  --log-file LOG_FILE   日志文件路径（当--log=file时使用）
+  --json-log JSON_LOG   JSON格式日志文件路径
+  -b, --backup          备份修改的文件
+  --backup-dir BACKUP_DIR
+                        备份目录路径（默认: file_monitor_backups）
+  -c, --command COMMAND 文件变化时执行的命令，可使用{path}、{filename}等占位符
+  -n, --notify          启用桌面通知
+
+其他选项:
+  -q, --quiet           静默模式，减少输出
+  -v, --verbose         详细模式，显示更多信息
+```
+
+### 命令占位符
+
+在使用 `-c/--command` 选项指定自定义命令时，可以使用以下占位符：
+
+- `{path}`: 完整的文件路径
+- `{filename}`: 仅文件名（不含路径）
+- `{event_type}`: 事件类型（created、modified、deleted、moved）
+- `{file_type}`: 文件类型（file或directory）
+- `{dest_path}`: 目标路径（仅对moved事件有效）
+- `{dest_filename}`: 目标文件名（仅对moved事件有效）
+
+例如：
+```bash
+python file_monitor.py -c "echo 文件 {filename} 被 {event_type} 了" 要监控的目录
+```
+
+### 依赖项
+
+此脚本依赖 `watchdog` 库来监控文件系统事件。如果尚未安装，请运行：
+```bash
+pip install watchdog
+```
+
+### 注意事项
+
+- 对于高频变化的目录（如日志目录或临时文件目录），建议使用批处理模式减少处理次数
+- 在Windows系统上，某些操作（如编辑并保存文件）可能会触发多个事件
+- 桌面通知功能在不同操作系统上可能需要额外的依赖库
+- 当使用备份功能时，请确保有足够的磁盘空间存储备份文件
