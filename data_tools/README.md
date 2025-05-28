@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # 数据处理工具 (data_processor.py)
 
 这个工具可以处理CSV和Excel文件，提供数据分析、转换、清洗和可视化功能，帮助用户高效处理和分析表格数据。

@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # Data Processing Tool (data_processor.py)
 
 This tool can process CSV and Excel files, providing data analysis, conversion, cleaning, and visualization functions to help users efficiently process and analyze tabular data.

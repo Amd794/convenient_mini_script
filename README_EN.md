@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # Convenient Mini Script Collection
 
 This repository contains a series of convenient scripts designed for personal daily use, aimed at improving work efficiency and simplifying repetitive tasks.

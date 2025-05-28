@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # 网络工具集
 
 这个目录包含了用于网络测试和管理的实用工具脚本。
