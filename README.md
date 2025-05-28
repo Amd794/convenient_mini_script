@@ -33,6 +33,7 @@
 - **[file_split.py](file_operations/file_split.py)**: 文件分割工具，支持按行数、大小、内容特征等多种方式分割大型文件，具有智能文件命名、表头保留和分割预览等功能，适用于处理大型日志、数据集和二进制文件。[详情](file_operations/README.md)
 - **[text_replace.py](file_operations/text_replace.py)**: 文本批量查找替换工具，支持普通文本和正则表达式匹配，可递归处理整个目录，提供详细替换报告，适用于代码重构、文档更新和内容规范化等场景。[详情](file_operations/README.md)
 - **[image_processor.py](file_operations/image_processor.py)**: 图像批处理工具，支持批量调整图像大小、格式转换、添加水印、应用滤镜效果等功能，适用于摄影作品整理、网站图片优化、社交媒体内容准备等场景。[详情](file_operations/README.md)
+- **[metadata_editor.py](file_operations/metadata_editor.py)**: 文件元数据编辑器，提供查看和修改各种文件类型元数据的功能，包括图像EXIF数据、音频ID3标签、视频元数据和文档属性等，支持批量处理和多种格式的元数据导入导出。[详情](file_operations/README.md)
 
 ### 系统工具
 
