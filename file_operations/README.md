@@ -2054,3 +2054,190 @@ EXIF选项:
 - 使用`--replace`选项时请格外小心，原始文件将被替换
 - 水印位置和大小可能需要根据图像内容进行调整
 - 对于非常大的目录，建议使用`--threads`选项启用多线程处理
+
+## metadata_editor.py - 文件元数据编辑器
+
+这个脚本提供了查看和修改各种文件类型元数据的功能，包括图像EXIF数据、音频ID3标签、视频元数据和文档属性等。
+
+### 功能特点
+
+- **多格式文件支持**:
+  - 图像: JPG, PNG, TIFF, WebP, HEIF/HEIC等
+  - 音频: MP3, FLAC, WAV, OGG, M4A, AAC等
+  - 视频: MP4, MOV, AVI, MKV, WebM等
+  - 文档: PDF, DOCX, XLSX, PPTX等
+- **全面的元数据处理**:
+  - 读取和显示详细的元数据信息
+  - 添加或修改元数据字段
+  - 删除元数据字段
+  - 按通配符筛选特定元数据字段
+- **批量处理能力**:
+  - 递归处理整个目录结构
+  - 使用模式匹配包含/排除文件
+  - 批量应用相同的元数据修改
+- **灵活的导入导出**:
+  - 将元数据导出为JSON, CSV或XML格式
+  - 从JSON或CSV文件导入元数据
+  - 多种格式的元数据输出
+- **安全操作选项**:
+  - 在修改前自动备份文件
+  - 模拟运行模式，不实际修改文件
+  - 详细的操作日志
+
+### 基本使用方法
+
+查看图像文件的EXIF信息:
+```bash
+python metadata_editor.py 照片.jpg
+```
+
+查看特定目录中所有JPEG文件的元数据:
+```bash
+python metadata_editor.py 照片目录/ --include "*.jpg" "*.jpeg"
+```
+
+查看并筛选特定元数据字段:
+```bash
+python metadata_editor.py 照片.jpg --fields "Date*" "Camera*" "GPS*"
+```
+
+将元数据导出为JSON格式:
+```bash
+python metadata_editor.py 照片目录/ --export-file metadata.json
+```
+
+将元数据保存到CSV文件:
+```bash
+python metadata_editor.py 音乐目录/ --output metadata.csv --format csv
+```
+
+### 修改元数据示例
+
+为图像文件添加版权信息:
+```bash
+python metadata_editor.py 照片目录/ --add "Copyright=© 2023 我的名字" --include "*.jpg"
+```
+
+修改音频文件的艺术家和专辑信息:
+```bash
+python metadata_editor.py 音乐.mp3 --add "artist=新艺术家" "album=新专辑名"
+```
+
+删除照片的GPS位置信息:
+```bash
+python metadata_editor.py 照片.jpg --remove "GPS*"
+```
+
+从CSV文件批量导入并应用元数据:
+```bash
+python metadata_editor.py 照片目录/ --import-file metadata.csv
+```
+
+在修改前备份文件:
+```bash
+python metadata_editor.py 重要文档.pdf --add "Author=我的名字" --backup
+```
+
+模拟运行，查看将要进行的更改:
+```bash
+python metadata_editor.py 视频目录/ --add "Title=我的视频" --dry-run
+```
+
+### 高级用法示例
+
+递归处理整个目录树中的图像文件:
+```bash
+python metadata_editor.py 照片库/ -r --include "*.jpg" "*.png"
+```
+
+将元数据结果格式化为XML输出:
+```bash
+python metadata_editor.py 文档目录/ -o metadata.xml --format xml
+```
+
+提取所有照片的拍摄日期和相机型号:
+```bash
+python metadata_editor.py 照片目录/ --fields "DateTimeOriginal" "Model" --output dates.csv --format csv
+```
+
+批量设置PDF文档的作者和标题:
+```bash
+python metadata_editor.py 文档/ --include "*.pdf" --add "Author=公司名称" "Title=项目报告"
+```
+
+### 完整命令行参数
+
+```
+usage: metadata_editor.py [-h] [-r] [--include PATTERN [PATTERN ...]] [--exclude PATTERN [PATTERN ...]]
+                         [--fields FIELD [FIELD ...]] [--add FIELD=VALUE [FIELD=VALUE ...]] 
+                         [--remove FIELD [FIELD ...]] [--preserve] [--import-file FILE] [--export-file FILE]
+                         [-o OUTPUT] [--format {text,json,csv,xml}] [--backup] [-v] [--dry-run]
+                         files [files ...]
+
+文件元数据编辑器 - 查看和修改各种文件类型的元数据
+
+positional arguments:
+  files                 要处理的文件或目录
+
+文件选择选项:
+  -r, --recursive       递归处理子目录
+  --include PATTERN [PATTERN ...]
+                        包含的文件模式（例如"*.jpg *.png"）
+  --exclude PATTERN [PATTERN ...]
+                        排除的文件模式（例如"*thumb*"）
+
+元数据选项:
+  --fields FIELD [FIELD ...]
+                        要显示的元数据字段（支持通配符）
+  --add FIELD=VALUE [FIELD=VALUE ...]
+                        要添加/修改的元数据字段和值，格式为"字段=值"
+  --remove FIELD [FIELD ...]
+                        要删除的元数据字段
+  --preserve            保留原始元数据（当添加新字段时）
+
+导入/导出选项:
+  --import-file FILE    从文件导入元数据 (JSON/CSV)
+  --export-file FILE    导出元数据到文件 (JSON/CSV/XML)
+
+输出选项:
+  -o, --output OUTPUT   输出结果到文件
+  --format {text,json,csv,xml}
+                        输出格式 (默认: text)
+
+其他选项:
+  --backup              在修改前备份文件
+  -v, --verbose         显示详细信息
+  --dry-run             模拟运行，不实际修改文件
+```
+
+### 使用场景
+
+- **摄影爱好者**: 批量管理照片的EXIF信息，添加版权信息，清理隐私数据
+- **音乐收藏家**: 整理和标准化音乐文件的ID3标签，完善专辑、艺术家信息
+- **视频创作者**: 添加或修改视频文件的元数据，如标题、作者、描述等
+- **文档管理**: 更新PDF或Office文档的属性，统一设置作者、公司等信息
+- **数据分析**: 提取和导出大量文件的元数据用于分析和报告
+
+### 依赖库
+
+该脚本需要以下Python库（根据需要处理的文件类型安装）：
+
+- **图像文件**: Pillow, piexif
+  ```bash
+  pip install Pillow piexif
+  ```
+
+- **音频文件**: mutagen
+  ```bash
+  pip install mutagen
+  ```
+
+- **视频文件**: ffmpeg-python
+  ```bash
+  pip install ffmpeg-python
+  ```
+
+- **文档文件**: PyPDF2, python-docx
+  ```bash
+  pip install PyPDF2 python-docx
+  ```
