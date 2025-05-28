@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # Development Assistance Tools
 
 This directory contains practical tool scripts for assisting software development.

@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # 便捷迷你脚本集合
 
 这个仓库包含了一系列为个人日常使用而设计的便捷脚本，旨在提高工作效率和简化重复性任务。

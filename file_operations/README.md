@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # 文件操作脚本集
 
 这个目录包含了用于文件操作的实用脚本。

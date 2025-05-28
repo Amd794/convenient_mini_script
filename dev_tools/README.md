@@ -1,3 +1,10 @@
+<p align="center">
+  <a href="./README_EN.md">English</a> |
+  <a href="./README.md">简体中文</a> 
+</p>
+
+----
+
 # 开发辅助工具集
 
 这个目录包含了用于辅助软件开发的实用工具脚本。
