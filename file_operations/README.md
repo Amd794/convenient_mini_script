@@ -2241,3 +2241,112 @@ positional arguments:
   ```bash
   pip install PyPDF2 python-docx
   ```
+
+## 文件清理工具 (file_cleaner.py)
+
+文件清理工具用于查找和删除临时文件、旧文件或不必要的文件，帮助用户清理磁盘空间，提高系统性能。
+
+### 主要特性
+
+- **多种清理规则**：支持按文件类型、大小、年龄、访问时间和内容特征进行清理
+- **智能模式识别**：自动识别常见的临时文件、缓存文件、日志文件和备份文件
+- **重复文件查找**：使用内容哈希检测和清理重复文件
+- **灵活清理选项**：提供报告、删除、移动到回收站和移动到目标目录等多种清理模式
+- **安全功能**：支持模拟运行、交互式确认和报告功能，防止误删重要文件
+- **目录过滤**：支持排除特定目录和文件模式
+
+### 基本用法
+
+```bash
+# 扫描目录并报告可清理的文件
+python file_cleaner.py D:\下载目录 --report
+
+# 清理指定目录中的临时文件，移动到回收站
+python file_cleaner.py C:\工作目录 --trash --temp
+
+# 查找并删除超过30天未访问的文件
+python file_cleaner.py E:\归档文件 --delete --last-access 30
+
+# 模拟清理重复文件
+python file_cleaner.py D:\照片 --duplicates --dry-run
+```
+
+### 高级用法
+
+```bash
+# 清理多个位置的特定类型文件
+python file_cleaner.py C:\Temp D:\Downloads --include "*.tmp" "*.bak" "thumbs.db" --trash
+
+# 查找大于100MB的旧日志文件
+python file_cleaner.py D:\Logs --logs --min-size 100MB --min-age 90 --report
+
+# 清理备份和缓存，但排除特定目录
+python file_cleaner.py C:\ --backups --cache --exclude-dir "Program Files" "Windows" "Users"
+
+# 将超过1GB的文件移动到外部存储
+python file_cleaner.py D:\Projects --min-size 1GB --move --target-dir "E:\大文件存储" --keep-structure
+```
+
+### 命令行参数
+
+**文件选择参数**:
+- `paths`: 要清理的文件或目录路径
+- `-r, --recursive`: 递归处理子目录（默认启用）
+- `--no-recursive`: 不递归处理子目录
+
+**清理模式**:
+- `--report`: 仅报告，不删除文件（默认）
+- `--delete`: 直接删除匹配的文件
+- `--trash`: 将匹配的文件移至回收站
+- `--move`: 将匹配的文件移动到指定目录
+- `-i, --interactive`: 交互式确认每个文件
+
+**文件筛选参数**:
+- `--include`: 要包含的文件模式列表（如 *.tmp *.bak）
+- `--exclude`: 要排除的文件模式列表
+- `--exclude-dir`: 要排除的目录名列表
+- `--min-size`: 最小文件大小（如 1KB, 5MB）
+- `--max-size`: 最大文件大小（如 10MB, 1GB）
+- `--min-age`: 最小文件年龄（天）
+- `--last-access`: 最后访问时间（天）
+- `--empty-only`: 仅处理空文件
+
+**清理选项**:
+- `--temp`: 清理临时文件（默认启用）
+- `--no-temp`: 不清理临时文件
+- `--cache`: 清理缓存文件和目录
+- `--logs`: 清理日志文件
+- `--backups`: 清理备份文件
+- `--duplicates`: 查找和清理重复文件
+- `--custom`: 自定义清理规则（正则表达式）
+
+**移动选项**:
+- `-t, --target-dir`: 移动文件的目标目录（当--move选项启用时使用）
+- `--keep-structure`: 移动文件时保持目录结构
+
+**输出选项**:
+- `-l, --log-file`: 将日志写入指定文件
+- `-n, --dry-run`: 模拟运行，不实际删除文件
+- `-v, --verbose`: 显示详细信息
+
+### 使用场景
+
+1. **系统维护**：定期清理系统中的临时文件和缓存，提高性能
+2. **磁盘空间管理**：快速查找和清理占用大量空间的文件和重复内容
+3. **开发环境清理**：清理编译生成的临时文件、缓存和日志
+4. **数据整理**：根据访问时间或年龄清理旧数据
+5. **安全清理**：在交互模式下有选择地清理敏感文件
+
+### 注意事项
+
+- 使用 `--delete` 选项时请谨慎，删除后无法恢复
+- 建议先使用 `--dry-run` 或 `--report` 模式查看将要删除的文件
+- 对重要数据使用 `--trash` 选项而非 `--delete`，以便于恢复
+- 使用 `--exclude-dir` 排除系统关键目录，避免影响系统运行
+
+### 依赖库
+
+- `send2trash`: 安全地将文件发送到回收站（使用 `--trash` 选项时需要）
+  ```
+  pip install send2trash
+  ```

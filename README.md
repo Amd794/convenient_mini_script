@@ -34,6 +34,7 @@
 - **[text_replace.py](file_operations/text_replace.py)**: 文本批量查找替换工具，支持普通文本和正则表达式匹配，可递归处理整个目录，提供详细替换报告，适用于代码重构、文档更新和内容规范化等场景。[详情](file_operations/README.md)
 - **[image_processor.py](file_operations/image_processor.py)**: 图像批处理工具，支持批量调整图像大小、格式转换、添加水印、应用滤镜效果等功能，适用于摄影作品整理、网站图片优化、社交媒体内容准备等场景。[详情](file_operations/README.md)
 - **[metadata_editor.py](file_operations/metadata_editor.py)**: 文件元数据编辑器，提供查看和修改各种文件类型元数据的功能，包括图像EXIF数据、音频ID3标签、视频元数据和文档属性等，支持批量处理和多种格式的元数据导入导出。[详情](file_operations/README.md)
+- **[file_cleaner.py](file_operations/file_cleaner.py)**: 文件清理工具，用于查找和删除临时文件、旧文件或不必要的文件，支持按文件模式、大小、年龄和访问时间筛选，并提供多种清理模式和安全功能。[详情](file_operations/README.md)
 
 ### 系统工具
 
