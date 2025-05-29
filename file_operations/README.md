@@ -2357,3 +2357,103 @@ python file_cleaner.py D:\Projects --min-size 1GB --move --target-dir "E:\大文
   ```
   pip install send2trash
   ```
+
+## format_converter.py - 文件格式转换工具
+
+这个脚本提供了在不同文件格式之间进行转换的功能，支持多种文件类型，如文档、图像、音频、视频等。
+
+### 功能特点
+
+- **多种格式支持**:
+  - 文档格式：PDF、DOCX、DOC、ODT、RTF、TXT等
+  - 图像格式：JPG、PNG、GIF、BMP、TIFF、WebP、SVG等
+  - 音频格式：MP3、WAV、OGG、FLAC、AAC等
+  - 视频格式：MP4、AVI、MKV、MOV、WebM等
+  - 数据格式：CSV、XLSX、XLS、ODS等
+  - Markdown与HTML格式互转
+- **批量转换**：可以批量处理多个文件或整个目录中的文件
+- **递归处理**：支持递归处理子目录中的文件
+- **并行处理**：支持多线程并行转换，提高处理速度
+- **质量控制**：对于图像和音视频转换，支持设定转换质量
+- **元数据控制**：可以选择是否保留文件元数据
+- **灵活输出**：支持指定输出文件或目录路径
+
+### 使用方法
+
+基本用法（转换单个文件）：
+```bash
+python format_converter.py document.docx pdf
+```
+
+指定输出文件：
+```bash
+python format_converter.py document.docx -t pdf -o output.pdf
+```
+
+批量转换整个目录中的所有Excel文件为CSV：
+```bash
+python format_converter.py -r -f xlsx -t csv ./documents
+```
+
+使用4个线程批量转换图片：
+```bash
+python format_converter.py -r -f jpg -t png -p 4 ./images
+```
+
+调整转换质量（0-100）：
+```bash
+python format_converter.py -q 90 image.jpg -t webp
+```
+
+列出支持的格式：
+```bash
+python format_converter.py --list-formats
+```
+
+查看特定格式可以转换到哪些格式：
+```bash
+python format_converter.py --list-formats docx
+```
+
+### 转换工具依赖
+
+脚本会自动检测系统中是否安装了以下转换工具：
+
+- **LibreOffice**: 用于文档格式转换（docx、pdf、odt等）
+- **ImageMagick**: 用于图像处理和转换（jpg、png、webp等）
+- **FFmpeg**: 用于音频和视频格式转换（mp3、mp4等）
+- **Pandoc**: 用于Markdown、HTML和其他文本格式转换
+
+如果缺少某个工具，相关的转换功能将受限，但其他功能仍然可用。
+
+### 完整命令行参数
+
+```
+usage: format_converter.py [-h] [-t TARGET_FORMAT] [-o OUTPUT] [-f SOURCE_FORMAT] [-r]
+                          [-q QUALITY] [-p PARALLEL] [--no-metadata] [--overwrite]
+                          [--list-formats [FORMAT]] [-v]
+                          [sources ...]
+
+文件格式转换工具 - 在不同文件格式之间进行转换
+
+positional arguments:
+  sources               要转换的源文件或目录路径
+
+options:
+  -h, --help            显示帮助信息并退出
+  -t, --to TARGET_FORMAT
+                        目标文件格式(如pdf, jpg等)
+  -o, --output OUTPUT   输出文件或目录，适用于转换单个文件或指定输出目录
+  -f, --from SOURCE_FORMAT
+                        源文件格式，用于批处理时只转换特定格式的文件
+  -r, --recursive       递归处理子目录
+  -q, --quality QUALITY
+                        转换质量(0-100)，影响图像和音视频转换质量
+  -p, --parallel PARALLEL
+                        并行处理的线程数
+  --no-metadata         不保留元数据
+  --overwrite           覆盖已存在的文件
+  --list-formats [FORMAT]
+                        列出支持的文件格式，可选择特定输入格式查看其支持的转换目标格式
+  -v, --verbose         输出详细日志
+```
