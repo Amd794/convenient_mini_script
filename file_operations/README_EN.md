@@ -1999,3 +1999,103 @@ options:
 - Consider using `--to-trash` option for safer cleaning (files can be recovered)
 - Be extremely careful when cleaning system directories
 - Regular backups are recommended before major cleaning operations 
+
+## format_converter.py - File Format Conversion Tool
+
+This script provides functionality for converting between different file formats, supporting various file types such as documents, images, audio, video, and more.
+
+### Features
+
+- **Multiple Format Support**:
+  - Document formats: PDF, DOCX, DOC, ODT, RTF, TXT, etc.
+  - Image formats: JPG, PNG, GIF, BMP, TIFF, WebP, SVG, etc.
+  - Audio formats: MP3, WAV, OGG, FLAC, AAC, etc.
+  - Video formats: MP4, AVI, MKV, MOV, WebM, etc.
+  - Data formats: CSV, XLSX, XLS, ODS, etc.
+  - Conversion between Markdown and HTML formats
+- **Batch Conversion**: Can process multiple files or all files in a directory
+- **Recursive Processing**: Supports processing files in subdirectories
+- **Parallel Processing**: Supports multi-threaded parallel conversion to improve processing speed
+- **Quality Control**: Supports setting conversion quality for images, audio, and video
+- **Metadata Control**: Option to preserve or remove file metadata
+- **Flexible Output**: Supports specifying output file or directory paths
+
+### Usage
+
+Basic usage (convert a single file):
+```bash
+python format_converter.py document.docx pdf
+```
+
+Specify output file:
+```bash
+python format_converter.py document.docx -t pdf -o output.pdf
+```
+
+Batch convert all Excel files in a directory to CSV:
+```bash
+python format_converter.py -r -f xlsx -t csv ./documents
+```
+
+Use 4 threads to batch convert images:
+```bash
+python format_converter.py -r -f jpg -t png -p 4 ./images
+```
+
+Adjust conversion quality (0-100):
+```bash
+python format_converter.py -q 90 image.jpg -t webp
+```
+
+List supported formats:
+```bash
+python format_converter.py --list-formats
+```
+
+View which formats a specific format can be converted to:
+```bash
+python format_converter.py --list-formats docx
+```
+
+### Conversion Tool Dependencies
+
+The script automatically detects whether the following conversion tools are installed on your system:
+
+- **LibreOffice**: For document format conversion (docx, pdf, odt, etc.)
+- **ImageMagick**: For image processing and conversion (jpg, png, webp, etc.)
+- **FFmpeg**: For audio and video format conversion (mp3, mp4, etc.)
+- **Pandoc**: For Markdown, HTML, and other text format conversions
+
+If a tool is missing, the related conversion functionality will be limited, but other functions will still be available.
+
+### Complete Command Line Parameters
+
+```
+usage: format_converter.py [-h] [-t TARGET_FORMAT] [-o OUTPUT] [-f SOURCE_FORMAT] [-r]
+                          [-q QUALITY] [-p PARALLEL] [--no-metadata] [--overwrite]
+                          [--list-formats [FORMAT]] [-v]
+                          [sources ...]
+
+File Format Conversion Tool - Convert between different file formats
+
+positional arguments:
+  sources               Source file or directory paths to convert
+
+options:
+  -h, --help            Show help information and exit
+  -t, --to TARGET_FORMAT
+                        Target file format (such as pdf, jpg, etc.)
+  -o, --output OUTPUT   Output file or directory, applicable for converting a single file or specifying an output directory
+  -f, --from SOURCE_FORMAT
+                        Source file format, used to convert only specific formats in batch processing
+  -r, --recursive       Process subdirectories recursively
+  -q, --quality QUALITY
+                        Conversion quality (0-100), affects image and audio/video conversion quality
+  -p, --parallel PARALLEL
+                        Number of threads for parallel processing
+  --no-metadata         Do not preserve metadata
+  --overwrite           Overwrite existing files
+  --list-formats [FORMAT]
+                        List supported file formats, optionally specify an input format to see its supported conversion target formats
+  -v, --verbose         Output detailed logs
+``` 
