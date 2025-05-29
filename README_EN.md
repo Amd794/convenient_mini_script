@@ -51,6 +51,7 @@ The scripts are categorized by function as follows:
 ### Network Tools
 
 - **[network_speed_test.py](network_tools/network_speed_test.py)**: Tests network connection performance, including download speed, upload speed, latency, and packet loss rate, supports historical data recording and visualization. [Details](network_tools/README_EN.md)
+- **[batch_downloader.py](network_tools/batch_downloader.py)**: Batch file download tool that supports concurrent downloads, resume capability, automatic retries, random delays, and download state saving. Provides detailed progress display and custom filename options. [Details](network_tools/README_EN.md)
 
 ### Development Aids
 
