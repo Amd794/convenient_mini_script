@@ -2457,3 +2457,131 @@ options:
                         列出支持的文件格式，可选择特定输入格式查看其支持的转换目标格式
   -v, --verbose         输出详细日志
 ```
+
+## pdf_toolkit.py - PDF文件处理工具集
+
+这个脚本提供了一系列处理PDF文件的功能，使您能够拆分、合并、提取页面以及以各种方式操作PDF文档。
+
+### 功能特点
+
+- **PDF拆分**:
+  - 根据页数将PDF拆分成单独的文件
+  - 支持自定义输出文件的命名模式
+  - 提供详细的拆分过程日志
+- **PDF合并**:
+  - 将多个PDF文件合并为一个文档
+  - 尽可能保持原始文档结构和元数据
+- **页面提取**:
+  - 从PDF文档中提取特定页面或页面范围
+  - 支持复杂的页面选择（例如"1-5,8,10-12"）
+- **页面旋转**:
+  - 将特定页面或页面范围旋转90、180或270度
+  - 在旋转过程中保留其他文档属性
+- **添加水印**:
+  - 添加可自定义文本、颜色、不透明度、角度和大小的文本水印
+  - 可以在页面上的任何位置放置水印
+- **添加页码**:
+  - 添加可自定义格式和位置的页码
+  - 支持不同的编号样式和起始页码
+- **PDF安全性**:
+  - 使用用户密码和所有者密码加密PDF
+  - 解密受保护的PDF文档
+- **PDF压缩**:
+  - 减小PDF文件大小以便于共享和存储
+  - 移除不必要的元数据以优化文件大小
+
+### 基本用法
+
+将PDF拆分为每个文件一页：
+```bash
+python pdf_toolkit.py split input.pdf
+```
+
+将PDF拆分为每个文件5页：
+```bash
+python pdf_toolkit.py split input.pdf --pages-per-file 5
+```
+
+合并多个PDF：
+```bash
+python pdf_toolkit.py merge output.pdf file1.pdf file2.pdf file3.pdf
+```
+
+提取特定页面：
+```bash
+python pdf_toolkit.py extract input.pdf --pages 1-5,8,10-12 --output extracted.pdf
+```
+
+旋转特定页面：
+```bash
+python pdf_toolkit.py rotate input.pdf --rotation 90 --pages 1-3 --output rotated.pdf
+```
+
+### 高级用法示例
+
+为PDF添加水印：
+```bash
+python pdf_toolkit.py watermark input.pdf --text "机密文件" --color gray --opacity 0.3 --angle 45 --size 40 --output watermarked.pdf
+```
+
+添加页码：
+```bash
+python pdf_toolkit.py number input.pdf --format "第%d页" --position bottom-right --output numbered.pdf
+```
+
+加密PDF：
+```bash
+python pdf_toolkit.py encrypt input.pdf --password 我的密码 --output encrypted.pdf
+```
+
+解密PDF：
+```bash
+python pdf_toolkit.py decrypt input.pdf --password 我的密码 --output decrypted.pdf
+```
+
+压缩PDF：
+```bash
+python pdf_toolkit.py compress input.pdf --output compressed.pdf
+```
+
+### 完整命令行参数
+
+```
+usage: pdf_toolkit.py [-h] [-o OUTPUT_DIR] [--debug]
+                     {split,merge,extract,rotate,watermark,number,encrypt,decrypt,compress} ...
+
+PDF工具集 - 提供PDF文件处理的多种功能
+
+positional arguments:
+  {split,merge,extract,rotate,watermark,number,encrypt,decrypt,compress}
+                        命令
+    split               拆分PDF文件
+    merge               合并多个PDF文件
+    extract             从PDF中提取页面
+    rotate              旋转PDF页面
+    watermark           给PDF添加水印
+    number              给PDF添加页码
+    encrypt             加密PDF文件
+    decrypt             解密PDF文件
+    compress            压缩PDF文件
+
+options:
+  -h, --help            显示帮助信息并退出
+  -o, --output-dir      处理后文件的保存目录（默认: ./pdf_output）
+  --debug               启用调试日志
+```
+
+### 依赖库
+
+此脚本需要PyPDF2库来处理PDF文件。对于水印和页码功能，还需要reportlab库：
+
+```bash
+pip install PyPDF2 reportlab
+```
+
+### 注意事项
+
+- 处理加密的PDF时，请确保记住您的密码，因为一旦丢失将无法恢复
+- 压缩功能提供基本的PDF优化；对于高级压缩，可能需要专门的工具
+- 为获得最佳的水印和页码效果，请确保安装了reportlab库
+- 处理非常大的PDF文件可能需要大量内存资源
