@@ -2099,3 +2099,131 @@ options:
                         List supported file formats, optionally specify an input format to see its supported conversion target formats
   -v, --verbose         Output detailed logs
 ``` 
+
+## pdf_toolkit.py - PDF File Processing Toolkit
+
+This script provides a comprehensive set of functions for processing PDF files, allowing you to split, merge, extract pages, and manipulate PDF documents in various ways.
+
+### Features
+
+- **PDF Splitting**:
+  - Split PDFs into separate files based on page count
+  - Support for custom naming patterns for output files
+  - Detailed logs of the splitting process
+- **PDF Merging**:
+  - Combine multiple PDF files into a single document
+  - Maintain original document structure and metadata when possible
+- **Page Extraction**:
+  - Extract specific pages or page ranges from PDF documents
+  - Support for complex page selections (e.g., "1-5,8,10-12")
+- **Page Rotation**:
+  - Rotate specific pages or page ranges by 90, 180, or 270 degrees
+  - Preserve other document properties during rotation
+- **Watermark Addition**:
+  - Add text watermarks with customizable text, color, opacity, angle, and size
+  - Position watermarks anywhere on the page
+- **Page Numbering**:
+  - Add page numbers with customizable format and position
+  - Support for different numbering styles and starting numbers
+- **PDF Security**:
+  - Encrypt PDFs with user and owner passwords
+  - Decrypt protected PDF documents
+- **PDF Compression**:
+  - Reduce PDF file size for easier sharing and storage
+  - Remove unnecessary metadata to optimize file size
+
+### Basic Usage
+
+Split a PDF into files with one page each:
+```bash
+python pdf_toolkit.py split input.pdf
+```
+
+Split a PDF into files with 5 pages each:
+```bash
+python pdf_toolkit.py split input.pdf --pages-per-file 5
+```
+
+Merge multiple PDFs:
+```bash
+python pdf_toolkit.py merge output.pdf file1.pdf file2.pdf file3.pdf
+```
+
+Extract specific pages:
+```bash
+python pdf_toolkit.py extract input.pdf --pages 1-5,8,10-12 --output extracted.pdf
+```
+
+Rotate specific pages:
+```bash
+python pdf_toolkit.py rotate input.pdf --rotation 90 --pages 1-3 --output rotated.pdf
+```
+
+### Advanced Usage Examples
+
+Add a watermark to a PDF:
+```bash
+python pdf_toolkit.py watermark input.pdf --text "CONFIDENTIAL" --color gray --opacity 0.3 --angle 45 --size 40 --output watermarked.pdf
+```
+
+Add page numbers:
+```bash
+python pdf_toolkit.py number input.pdf --format "Page %d" --position bottom-right --output numbered.pdf
+```
+
+Encrypt a PDF:
+```bash
+python pdf_toolkit.py encrypt input.pdf --password mysecretpassword --output encrypted.pdf
+```
+
+Decrypt a PDF:
+```bash
+python pdf_toolkit.py decrypt input.pdf --password mysecretpassword --output decrypted.pdf
+```
+
+Compress a PDF:
+```bash
+python pdf_toolkit.py compress input.pdf --output compressed.pdf
+```
+
+### Complete Command-Line Parameters
+
+```
+usage: pdf_toolkit.py [-h] [-o OUTPUT_DIR] [--debug]
+                     {split,merge,extract,rotate,watermark,number,encrypt,decrypt,compress} ...
+
+PDF Toolkit - Provides various functions for PDF file processing
+
+positional arguments:
+  {split,merge,extract,rotate,watermark,number,encrypt,decrypt,compress}
+                        Command
+    split               Split PDF file
+    merge               Merge multiple PDF files
+    extract             Extract pages from PDF
+    rotate              Rotate PDF pages
+    watermark           Add watermark to PDF
+    number              Add page numbers to PDF
+    encrypt             Encrypt PDF file
+    decrypt             Decrypt PDF file
+    compress            Compress PDF file
+
+options:
+  -h, --help            Show help message and exit
+  -o, --output-dir      Output directory path (default: ./pdf_output)
+  --debug               Enable debug logs
+```
+
+### Dependencies
+
+This script requires the PyPDF2 library for PDF processing. For watermark and page numbering functionality, the reportlab library is also required:
+
+```bash
+pip install PyPDF2 reportlab
+```
+
+### Notes
+
+- When working with encrypted PDFs, make sure to keep track of your passwords as they cannot be recovered if lost
+- The compression functionality provides basic PDF optimization; for advanced compression, specialized tools might be needed
+- For best results with watermarks and page numbering, ensure the reportlab library is installed
+- Processing very large PDF files may require significant memory resources 

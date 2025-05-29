@@ -43,6 +43,7 @@ The scripts are categorized by function as follows:
 - **[metadata_editor.py](file_operations/metadata_editor.py)**: File metadata editor that provides functionality for viewing and modifying metadata of various file types, including image EXIF data, audio ID3 tags, video metadata, and document properties, supporting batch processing and metadata import/export in multiple formats. [Details](file_operations/README_EN.md)
 - **[file_cleaner.py](file_operations/file_cleaner.py)**: File cleaning tool used to find and delete temporary files, old files, or unnecessary files, supports filtering by file patterns, size, age, and access time, and provides various cleaning modes and safety features. [Details](file_operations/README_EN.md)
 - **[format_converter.py](file_operations/format_converter.py)**: File format conversion tool that enables conversions between different file formats, including documents, images, audio, video, and data formats, with features for batch conversion, quality control, and parallel processing. [Details](file_operations/README_EN.md)
+- **[pdf_toolkit.py](file_operations/pdf_toolkit.py)**: PDF file processing toolkit that provides functions for splitting, merging, extracting pages, rotating pages, adding watermarks, adding page numbers, encryption/decryption, and more, fulfilling various PDF document processing needs. [Details](file_operations/README_EN.md)
 
 ### System Tools
 

@@ -43,6 +43,7 @@
 - **[metadata_editor.py](file_operations/metadata_editor.py)**: 文件元数据编辑器，提供查看和修改各种文件类型元数据的功能，包括图像EXIF数据、音频ID3标签、视频元数据和文档属性等，支持批量处理和多种格式的元数据导入导出。[详情](file_operations/README.md)
 - **[file_cleaner.py](file_operations/file_cleaner.py)**: 文件清理工具，用于查找和删除临时文件、旧文件或不必要的文件，支持按文件模式、大小、年龄和访问时间筛选，并提供多种清理模式和安全功能。[详情](file_operations/README.md)
 - **[format_converter.py](file_operations/format_converter.py)**: 文件格式转换工具，支持在不同文件格式之间进行转换，包括文档、图像、音频、视频和数据等多种格式，提供批量转换、质量控制和并行处理等功能。[详情](file_operations/README.md)
+- **[pdf_toolkit.py](file_operations/pdf_toolkit.py)**: PDF文件处理工具集，提供拆分、合并、提取页面、旋转页面、添加水印、添加页码、加密/解密等功能，满足各种PDF文档处理需求。[详情](file_operations/README.md)
 
 ### 系统工具
 
