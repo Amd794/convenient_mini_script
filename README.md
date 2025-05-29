@@ -51,6 +51,7 @@
 ### 网络工具
 
 - **[network_speed_test.py](network_tools/network_speed_test.py)**: 测试网络连接性能，包括下载速度、上传速度、延迟和丢包率，支持历史数据记录和可视化。[详情](network_tools/README.md)
+- **[batch_downloader.py](network_tools/batch_downloader.py)**: 网络文件批量下载工具，支持并发下载、断点续传、自动重试、随机延时和下载状态保存等功能，提供详细进度显示和自定义文件名选项。[详情](network_tools/README.md)
 
 ### 开发辅助
 
