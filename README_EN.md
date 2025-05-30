@@ -44,6 +44,7 @@ The scripts are categorized by function as follows:
 - **[file_cleaner.py](file_operations/file_cleaner.py)**: File cleaning tool used to find and delete temporary files, old files, or unnecessary files, supports filtering by file patterns, size, age, and access time, and provides various cleaning modes and safety features. [Details](file_operations/README_EN.md)
 - **[format_converter.py](file_operations/format_converter.py)**: File format conversion tool that enables conversions between different file formats, including documents, images, audio, video, and data formats, with features for batch conversion, quality control, and parallel processing. [Details](file_operations/README_EN.md)
 - **[pdf_toolkit.py](file_operations/pdf_toolkit.py)**: PDF file processing toolkit that provides functions for splitting, merging, extracting pages, rotating pages, adding watermarks, adding page numbers, encryption/decryption, and more, fulfilling various PDF document processing needs. [Details](file_operations/README_EN.md)
+- **[media_organizer.py](file_operations/media_organizer.py)**: Media file organizer that automatically arranges and categorizes photos and videos based on their metadata information (capture date, GPS location, etc.), supports organization by date, location, or event, with features for intelligent renaming, automatic event grouping, and detailed report generation. [Details](file_operations/README_EN.md)
 
 ### System Tools
 
