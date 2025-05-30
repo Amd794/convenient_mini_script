@@ -2585,3 +2585,153 @@ pip install PyPDF2 reportlab
 - 压缩功能提供基本的PDF优化；对于高级压缩，可能需要专门的工具
 - 为获得最佳的水印和页码效果，请确保安装了reportlab库
 - 处理非常大的PDF文件可能需要大量内存资源
+
+## media_organizer.py - 媒体文件组织器
+
+这个脚本提供了智能的媒体文件组织功能，可以根据照片和视频的元数据（如拍摄日期、GPS位置等）自动将它们分类整理到有意义的目录结构中。
+
+### 功能特点
+
+- **多种组织方式**:
+  - 按日期组织（年/月/日结构）
+  - 按位置组织（国家/城市/区域）
+  - 按事件自动分组（基于时间间隔）
+  - 平坦结构（仅重命名，不创建层级目录）
+- **元数据提取**:
+  - 从图像文件中提取EXIF信息（拍摄日期、GPS坐标、相机型号等）
+  - 从视频文件中提取创建日期和位置信息
+  - 根据GPS坐标自动获取地理位置信息（国家、城市、区域）
+- **智能文件命名**:
+  - 自定义命名模板
+  - 支持多种变量（日期、时间、位置、相机信息、计数器等）
+  - 自动处理文件名冲突
+- **自动事件分组**:
+  - 基于时间间隔自动将文件分组为事件
+  - 可设置事件内文件最小数量和最大时间间隔
+  - 自动创建有意义的事件文件夹名称
+- **批量处理**:
+  - 多线程并行处理，提高效率
+  - 支持递归处理子目录
+  - 选择性处理特定类型的媒体文件（图像、视频、RAW格式）
+- **安全功能**:
+  - 预览模式（不实际移动文件）
+  - 选择复制而不是移动文件
+  - 详细的处理日志和统计报告
+
+### 基本用法
+
+按日期组织媒体文件（默认模式）：
+```bash
+python media_organizer.py D:\Photos
+```
+
+按位置组织媒体文件：
+```bash
+python media_organizer.py D:\Photos -t location
+```
+
+指定输出目录：
+```bash
+python media_organizer.py D:\Photos -o E:\Organized_Photos
+```
+
+预览模式（不实际移动文件）：
+```bash
+python media_organizer.py D:\Photos --dry-run
+```
+
+### 高级用法示例
+
+使用自定义命名模板：
+```bash
+python media_organizer.py D:\Photos --rename "{date}_{camera}_{counter}"
+```
+
+复制而不是移动文件：
+```bash
+python media_organizer.py D:\Photos --copy
+```
+
+自动创建事件文件夹：
+```bash
+python media_organizer.py D:\Photos -t event --events
+```
+
+自定义事件分组参数：
+```bash
+python media_organizer.py D:\Photos -t event --events --event-gap 1800 --min-event-files 3
+```
+
+只处理特定类型的文件：
+```bash
+python media_organizer.py D:\Photos --file-types image raw
+```
+
+调整并发线程数以提高性能：
+```bash
+python media_organizer.py D:\Photos --threads 8
+```
+
+生成处理报告：
+```bash
+python media_organizer.py D:\Photos --report report.json
+```
+
+### 完整命令行参数
+
+```
+用法: media_organizer.py [-h] [-o OUTPUT_DIR] [-t {date,location,event,flat}]
+                        [-r] [--rename TEMPLATE] [--copy] [--dry-run]
+                        [--file-types {image,video,raw} [{image,video,raw} ...]]
+                        [--events] [--event-gap SECONDS]
+                        [--min-event-files N] [--threads N]
+                        [--report FILE] [-v] [--debug]
+                        input_dir
+
+媒体文件组织器 - 根据日期、位置等信息组织照片和视频
+
+位置参数:
+  input_dir              要处理的输入目录
+
+可选参数:
+  -h, --help            显示帮助信息并退出
+  -o, --output-dir      输出目录，默认将在原位置组织
+  -t, --type {date,location,event,flat}
+                        组织类型: date(按日期), location(按位置), event(按事件), flat(平坦结构)
+  -r, --recursive       递归处理子目录
+  --rename TEMPLATE     重命名模板，例如: '{date}_{counter}'
+                        可用变量: {date}, {year}, {month}, {day}, {hour}, {minute}, 
+                        {second}, {camera}, {location}, {counter}, {original}
+  --copy                复制而不是移动文件
+  --dry-run             预览模式，不实际移动文件
+  --file-types {image,video,raw} [{image,video,raw} ...]
+                        要处理的文件类型
+  --events              创建事件文件夹
+  --event-gap SECONDS   定义事件的时间间隔(秒)
+  --min-event-files N   每个事件的最小文件数量
+  --threads N           并行处理的线程数
+  --report FILE         生成报告文件路径
+  -v, --verbose         详细输出模式
+  --debug               调试模式
+```
+
+### 依赖库
+
+此脚本需要以下Python库：
+
+```bash
+pip install pillow exif hachoir geopy
+```
+
+- **pillow**: 处理图像和提取基本EXIF数据
+- **exif**: 提供更详细的EXIF数据提取
+- **hachoir**: 用于提取视频元数据
+- **geopy**: 根据GPS坐标获取位置信息
+
+### 注意事项
+
+- 按位置组织需要网络连接以查询地理位置信息
+- 处理大量文件时，考虑增加线程数以提高效率
+- 首次运行时建议使用`--dry-run`选项来预览变更
+- 确保拥有足够权限访问和修改目标目录
+- 对于没有元数据的文件，将使用文件修改时间作为后备选项

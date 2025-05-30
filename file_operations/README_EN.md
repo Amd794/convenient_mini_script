@@ -2227,3 +2227,153 @@ pip install PyPDF2 reportlab
 - The compression functionality provides basic PDF optimization; for advanced compression, specialized tools might be needed
 - For best results with watermarks and page numbering, ensure the reportlab library is installed
 - Processing very large PDF files may require significant memory resources 
+
+## media_organizer.py - Media File Organizer
+
+This script provides intelligent media file organization capabilities, automatically sorting photos and videos into meaningful directory structures based on their metadata (such as capture date, GPS location, etc.).
+
+### Features
+
+- **Multiple Organization Methods**:
+  - Organize by date (Year/Month/Day structure)
+  - Organize by location (Country/City/District)
+  - Automatic grouping by events (based on time intervals)
+  - Flat structure (renaming only, without creating hierarchical directories)
+- **Metadata Extraction**:
+  - Extract EXIF information from image files (capture date, GPS coordinates, camera model, etc.)
+  - Extract creation date and location information from video files
+  - Automatically retrieve location information based on GPS coordinates (country, city, district)
+- **Intelligent File Naming**:
+  - Custom naming templates
+  - Support for various variables (date, time, location, camera info, counter, etc.)
+  - Automatic handling of filename conflicts
+- **Automatic Event Grouping**:
+  - Automatically group files into events based on time intervals
+  - Configurable minimum file count per event and maximum time gap
+  - Auto-generation of meaningful event folder names
+- **Batch Processing**:
+  - Multi-threaded parallel processing for improved efficiency
+  - Support for recursive processing of subdirectories
+  - Selective processing of specific media file types (images, videos, RAW formats)
+- **Safety Features**:
+  - Preview mode (no actual file movement)
+  - Option to copy instead of move files
+  - Detailed processing logs and statistical reports
+
+### Basic Usage
+
+Organize media files by date (default mode):
+```bash
+python media_organizer.py D:\Photos
+```
+
+Organize media files by location:
+```bash
+python media_organizer.py D:\Photos -t location
+```
+
+Specify output directory:
+```bash
+python media_organizer.py D:\Photos -o E:\Organized_Photos
+```
+
+Preview mode (no actual file movement):
+```bash
+python media_organizer.py D:\Photos --dry-run
+```
+
+### Advanced Usage Examples
+
+Use custom naming template:
+```bash
+python media_organizer.py D:\Photos --rename "{date}_{camera}_{counter}"
+```
+
+Copy instead of moving files:
+```bash
+python media_organizer.py D:\Photos --copy
+```
+
+Automatically create event folders:
+```bash
+python media_organizer.py D:\Photos -t event --events
+```
+
+Customize event grouping parameters:
+```bash
+python media_organizer.py D:\Photos -t event --events --event-gap 1800 --min-event-files 3
+```
+
+Process only specific file types:
+```bash
+python media_organizer.py D:\Photos --file-types image raw
+```
+
+Adjust concurrent thread count for performance:
+```bash
+python media_organizer.py D:\Photos --threads 8
+```
+
+Generate a processing report:
+```bash
+python media_organizer.py D:\Photos --report report.json
+```
+
+### Complete Command Line Parameters
+
+```
+usage: media_organizer.py [-h] [-o OUTPUT_DIR] [-t {date,location,event,flat}]
+                         [-r] [--rename TEMPLATE] [--copy] [--dry-run]
+                         [--file-types {image,video,raw} [{image,video,raw} ...]]
+                         [--events] [--event-gap SECONDS]
+                         [--min-event-files N] [--threads N]
+                         [--report FILE] [-v] [--debug]
+                         input_dir
+
+Media File Organizer - Organize photos and videos based on date, location, and other information
+
+positional arguments:
+  input_dir             Input directory to process
+
+optional arguments:
+  -h, --help            Show help information and exit
+  -o, --output-dir      Output directory, defaults to organizing in place
+  -t, --type {date,location,event,flat}
+                        Organization type: date, location, event, or flat structure
+  -r, --recursive       Process subdirectories recursively
+  --rename TEMPLATE     Rename template, e.g.: '{date}_{counter}'
+                        Available variables: {date}, {year}, {month}, {day}, {hour}, {minute}, 
+                        {second}, {camera}, {location}, {counter}, {original}
+  --copy                Copy instead of move files
+  --dry-run             Preview mode, don't actually move files
+  --file-types {image,video,raw} [{image,video,raw} ...]
+                        File types to process
+  --events              Create event folders
+  --event-gap SECONDS   Time gap defining events (seconds)
+  --min-event-files N   Minimum number of files per event
+  --threads N           Number of threads for parallel processing
+  --report FILE         Generate report file path
+  -v, --verbose         Verbose output mode
+  --debug               Debug mode
+```
+
+### Dependencies
+
+This script requires the following Python libraries:
+
+```bash
+pip install pillow exif hachoir geopy
+```
+
+- **pillow**: For image processing and basic EXIF data extraction
+- **exif**: For more detailed EXIF data extraction
+- **hachoir**: For extracting metadata from video files
+- **geopy**: For retrieving location information from GPS coordinates
+
+### Notes
+
+- Location-based organization requires network connectivity to query geographic information
+- When processing large numbers of files, consider increasing thread count for better performance
+- It's recommended to use the `--dry-run` option on first run to preview changes
+- Ensure you have sufficient permissions to access and modify the target directories
+- For files without metadata, the file modification time will be used as a fallback option 
