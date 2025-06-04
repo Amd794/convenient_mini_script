@@ -22,6 +22,7 @@
 - **开发辅助**: 代码格式化、依赖管理、环境配置等
 - **网络工具**: 下载辅助、API测试、网络监测等
 - **数据处理**: 数据转换、提取、分析等
+- **多媒体工具**: 音视频处理、字幕生成、媒体转换等
 
 ## 可用脚本
 
@@ -49,6 +50,10 @@
 ### 系统工具
 
 - **[system_monitor.py](system_tools/system_monitor.py)**: 实时监控系统资源使用情况，显示CPU、内存、磁盘和网络使用情况，支持数据导出。[详情](system_tools/README.md)
+
+### 多媒体工具
+
+- **[subtitle_generator.py](multimedia_tools/subtitle_generator.py)**: 字幕生成器，使用OpenAI的Whisper模型从视频或音频文件中生成高质量字幕，支持多种字幕格式（SRT、VTT、TXT）、多语言识别和翻译功能。[详情](multimedia_tools/README.md)
 
 ### 网络工具
 
