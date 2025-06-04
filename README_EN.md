@@ -22,6 +22,7 @@ The scripts are categorized by function as follows:
 - **Development Aids**: Code formatting, dependency management, environment configuration, etc.
 - **Network Tools**: Download assistance, API testing, network monitoring, etc.
 - **Data Processing**: Data conversion, extraction, analysis, etc.
+- **Multimedia Tools**: Audio/video processing, subtitle generation, media conversion, etc.
 
 ## Available Scripts
 
@@ -49,6 +50,10 @@ The scripts are categorized by function as follows:
 ### System Tools
 
 - **[system_monitor.py](system_tools/system_monitor.py)**: Monitors system resource usage in real-time, displaying CPU, memory, disk, and network usage, supports data export. [Details](system_tools/README_EN.md)
+
+### Multimedia Tools
+
+- **[subtitle_generator.py](multimedia_tools/subtitle_generator.py)**: Subtitle generator that uses OpenAI's Whisper model to create high-quality subtitles from video or audio files, supporting multiple subtitle formats (SRT, VTT, TXT), multilingual recognition, and translation functions. [Details](multimedia_tools/README.md)
 
 ### Network Tools
 
